@@ -28,10 +28,11 @@ namespace CollageRestAPI
             BsonClassMap.RegisterClassMap<GradeModel>(x => x.AutoMap());
 
             var dbClient = BaseRepository.Instance.DbClient;
+            var db = BaseRepository.Instance.Db;
             dbClient = new MongoClient("mongodb://localhost");
-            BaseRepository.Instance.Db = dbClient.GetDatabase("collagerestapi");
-            //BaseRepository.Instance.Db.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
-            ///System.Diagnostics.Debug.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            db = dbClient.GetDatabase("collagerestapi");          
+            //db.RunCommandAsync((Command<BsonDocument>)"{ping:1}").Wait();
+            //System.Diagnostics.Debug.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         }
     }
 }
