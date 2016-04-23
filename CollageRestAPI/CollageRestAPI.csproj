@@ -151,6 +151,10 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="WebApi.Hal, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebApi.Hal.2.6.0\lib\net45\WebApi.Hal.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -215,6 +219,7 @@
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Models\CourseModel.cs" />
     <Compile Include="Models\GradeModel.cs" />
+    <Compile Include="Models\LinkModel.cs" />
     <Compile Include="Models\StudentModel.cs" />
     <Compile Include="Providers\StudentIndexProvider.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />

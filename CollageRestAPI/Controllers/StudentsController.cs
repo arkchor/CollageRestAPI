@@ -9,17 +9,19 @@ using CollageRestAPI.Providers;
 
 namespace CollageRestAPI.Controllers
 {
-    [RoutePrefix("api/Student")]
+    [RoutePrefix("api/Students")]
     public class StudentsController : ApiController
     {
         /*=======================================
         =========== GET METHODS =================
         =======================================*/
 
-        // GET api/Student
-        public List<StudentModel> GetStudents()
+        // GET api/Students
+        [HttpGet, Route("")]
+        public IHttpActionResult GetStudents()
         {
-            return BaseRepository.Instance.Students;
+
+            return Ok(BaseRepository.Instance.Students);
         }
 
         // GET api/Student/id
