@@ -40,13 +40,13 @@ namespace CollageRestAPI.Controllers
         }
 
         // GET api/Student/id/Grades/issueYear/issueMonth/issueDay (eg. /Grades/2016/01/03 )
-        [Route("{id}/Grades/{issueYear}/{issueMonth}/{issueDay}")]
-        public List<GradeModel> GetGradeByDay(int id, int issueYear, int issueMonth, int issueDay)
-        {
-            var student = BaseRepository.Instance.StudentsCollection.Find(x => x.Id == id);
-            DateTime incomingData = new DateTime(issueYear, issueMonth, issueDay);
-            return student.Grades.Where(x => x.IssueDateTime == incomingData).ToList();
-        }
+        //[Route("{id}/Grades/{issueYear}/{issueMonth}/{issueDay}")]
+        //public List<GradeModel> GetGradeByDay(int id, int issueYear, int issueMonth, int issueDay)
+        //{
+        //    var student = BaseRepository.Instance.StudentsCollection.Find(x => x.Id == id);
+        //    DateTime incomingData = new DateTime(issueYear, issueMonth, issueDay);
+        //    return student.Grades.Where(x => x.IssueDateTime == incomingData).ToList();
+        //}
 
         // GET api/Student/id/Grades/courseName
         [Route("{id}/Grades/{courseName}")]
@@ -65,7 +65,7 @@ namespace CollageRestAPI.Controllers
         public HttpResponseMessage PostStudents([FromBody]List<StudentModel> studentsToCreate)
         {
             //studentsToCreate.ForEach(x => x.Index = IdProvider.Instance.GetId());
-            BaseRepository.Instance.StudentsCollection.AddRange(studentsToCreate);
+            BaseRepository.Instance.StudentsCollection.Add(studentsToCreate);
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.Created);
             response.Headers.Location = new Uri(Url.Content("~/api/Student"));
             return response;
@@ -86,37 +86,37 @@ namespace CollageRestAPI.Controllers
         =======================================*/
 
         // PUT api/Student/id
-        [Route("{id}")]
-        public HttpResponseMessage PutStudent(int id, [FromBody]StudentModel studentToUpdate)
-        {
-            int studentIndex = BaseRepository.Instance.StudentsCollection.FindIndex(x => x.Id == id);
-            BaseRepository.Instance.StudentsCollection[studentIndex] = studentToUpdate;
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
+        //[Route("{id}")]
+        //public HttpResponseMessage PutStudent(int id, [FromBody]StudentModel studentToUpdate)
+        //{
+        //    int studentIndex = BaseRepository.Instance.StudentsCollection.FindIndex(x => x.Id == id);
+        //    BaseRepository.Instance.StudentsCollection[studentIndex] = studentToUpdate;
+        //    return Request.CreateResponse(HttpStatusCode.OK);
+        //}
 
         // PUT api/Student/id/Grades/issueYear/issueMonth/issueDay (eg. /Grades/2016/01/03 )
-        [Route("{id}/Grades/{issueYear}/{issueMonth}/{issueDay}")]
-        public HttpResponseMessage PutGrade(int id, int issueYear, int issueMonth, int issueDay, [FromBody]GradeModel gradeToUpdate)
-        {
-            var student = BaseRepository.Instance.StudentsCollection.Find(x => x.Id == id);
-            DateTime incomingData = new DateTime(issueYear, issueMonth, issueDay);
-            int gradeIndex = student.Grades.FindIndex(x => x.IssueDateTime == incomingData);
-            student.Grades[gradeIndex] = gradeToUpdate;
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
+        //[Route("{id}/Grades/{issueYear}/{issueMonth}/{issueDay}")]
+        //public HttpResponseMessage PutGrade(int id, int issueYear, int issueMonth, int issueDay, [FromBody]GradeModel gradeToUpdate)
+        //{
+        //    var student = BaseRepository.Instance.StudentsCollection.Find(x => x.Id == id);
+        //    DateTime incomingData = new DateTime(issueYear, issueMonth, issueDay);
+        //    int gradeIndex = student.Grades.FindIndex(x => x.IssueDateTime == incomingData);
+        //    student.Grades[gradeIndex] = gradeToUpdate;
+        //    return Request.CreateResponse(HttpStatusCode.OK);
+        //}
 
         /*=======================================
         =========== DELETE METHODS ==============
         =======================================*/
 
         // DELETE api/Student/id
-        [Route("{id}")]
-        public HttpResponseMessage DeleteStudent(int id)
-        {
-            var studentsList = BaseRepository.Instance.StudentsCollection;
-            studentsList.Remove(studentsList.Single(x => x.Id == id));
-            return Request.CreateResponse(HttpStatusCode.OK);
-        }
+        //[Route("{id}")]
+        //public HttpResponseMessage DeleteStudent(int id)
+        //{
+        //    var studentsList = BaseRepository.Instance.StudentsCollection;
+        //    studentsList.Remove(studentsList.Single(x => x.Id == id));
+        //    return Request.CreateResponse(HttpStatusCode.OK);
+        //}
 
         // DELETE api/Student/id/Grades/issueYear/issueMonth/issueDay (eg. /Grades/2016/01/03 )
         [Route("{id}/Grades/{issueYear}/{issueMonth}/{issueDay}")]
