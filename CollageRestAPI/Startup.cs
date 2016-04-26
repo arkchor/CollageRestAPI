@@ -9,6 +9,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using CollageRestAPI.Providers;
 using System.Collections;
+using CollageRestAPI.Repositories;
 
 [assembly: OwinStartup(typeof(CollageRestAPI.Startup))]
 
@@ -49,7 +50,7 @@ namespace CollageRestAPI
                 var student = new StudentModel();
                 student.FirstName = "imie" + i;
                 student.LastName = "nazwisko" + i;
-                student.Index = StudentIndexProvider.Instance.currentIndex;
+                student.Id = StudentIndexProvider.Instance.currentIndex;
                 students.Add(student);
             }
             BaseRepository.Instance.Students.AddRange(students);

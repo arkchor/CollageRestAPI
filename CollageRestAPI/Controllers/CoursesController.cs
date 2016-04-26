@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using CollageRestAPI.Models;
+using CollageRestAPI.Repositories;
 
 namespace CollageRestAPI.Controllers
 {
@@ -63,7 +64,7 @@ namespace CollageRestAPI.Controllers
         public HttpResponseMessage PostGrades(string courseName, int id, [FromBody]List<GradeModel> gradesToAdd)
         {
             var course = BaseRepository.Instance.Courses.Single(x => x.CourseName == courseName);
-            var student = BaseRepository.Instance.Students.Single(x => x.Index == id);
+            var student = BaseRepository.Instance.Students.Single(x => x.Id == id);
             gradesToAdd.ForEach(x => x.Student = student);
             course.Grades.AddRange(gradesToAdd);
             student.Grades.AddRange(gradesToAdd);

@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
+using MongoRepository;
 
 namespace CollageRestAPI.Models
 {
     //[DataContract(IsReference = true)]
-    public class CourseModel
+    [CollectionName("courses")]
+    public class CourseModel : IEntity<Guid>
     {
         [BsonId]
         public Guid Id { get; set; }

@@ -1,10 +1,10 @@
-﻿using MongoDB.Driver;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using CollageRestAPI.Models;
+using MongoDB.Driver;
+using MongoRepository;
 
-namespace CollageRestAPI.Models
+namespace CollageRestAPI.Repositories
 {
     public sealed class BaseRepository
     {
@@ -18,5 +18,8 @@ namespace CollageRestAPI.Models
 
         public List<StudentModel> Students { get; set; } = new List<StudentModel>();
         public List<CourseModel> Courses { get; set; } = new List<CourseModel>();
+
+        public MongoRepository<StudentModel, int> StudentsCollection { get; set; }
+        public MongoRepository<CourseModel, Guid> CoursesCollection { get; set; }
     }
 }

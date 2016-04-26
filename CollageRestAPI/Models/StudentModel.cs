@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
+using MongoRepository;
 
 namespace CollageRestAPI.Models
 {
     //[DataContract(IsReference = true)]
-    public class StudentModel
+    [CollectionName("students")]
+    public class StudentModel : IEntity<int>
     {
         //if (Enumerable.Range(1, 999999).Contains(value))
         [BsonId]
-        public int Index { get; set; }
+        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BornDate { get; set; }
