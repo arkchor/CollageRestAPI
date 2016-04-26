@@ -53,7 +53,7 @@ namespace CollageRestAPI
                 student.Id = StudentIndexProvider.Instance.currentIndex;
                 students.Add(student);
             }
-            BaseRepository.Instance.Students.AddRange(students);
+            BaseRepository.Instance.StudentsCollection.AddRange(students);
             var db = BaseRepository.Instance.Db;
             //if(db.ListCollections().ForEachAsync(x => x.))
             //var list = db.ListCollections();

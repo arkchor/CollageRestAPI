@@ -22,28 +22,28 @@ namespace CollageRestAPI.Controllers
         public IHttpActionResult GetStudents()
         {
 
-            return Ok(BaseRepository.Instance.Students);
+            return Ok(BaseRepository.Instance.StudentsCollection);
         }
 
         // GET api/Student/id
         [Route("{id}")]
         public StudentModel GetStudent(int id)
         {
-            return BaseRepository.Instance.Students.Single(x => x.Id == id);
+            return BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
         }
 
         // GET api/Student/id/Grades
         [Route("{id}/Grades")]
         public List<GradeModel> GetGrades(int id)
         {
-            return BaseRepository.Instance.Students.Single(x => x.Id == id).Grades;
+            return BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id).Grades;
         }
 
         // GET api/Student/id/Grades/issueYear/issueMonth/issueDay (eg. /Grades/2016/01/03 )
         [Route("{id}/Grades/{issueYear}/{issueMonth}/{issueDay}")]
         public List<GradeModel> GetGradeByDay(int id, int issueYear, int issueMonth, int issueDay)
         {
-            var student = BaseRepository.Instance.Students.Find(x => x.Id == id);
+            var student = BaseRepository.Instance.StudentsCollection.Find(x => x.Id == id);
             DateTime incomingData = new DateTime(issueYear, issueMonth, issueDay);
             return student.Grades.Where(x => x.IssueDateTime == incomingData).ToList();
         }
@@ -52,8 +52,8 @@ namespace CollageRestAPI.Controllers
         [Route("{id}/Grades/{courseName}")]
         public List<GradeModel> GetGradesByCourse(int id, string courseName)
         {
-            var course = BaseRepository.Instance.Courses.Single(x => x.CourseName == courseName);
-            var student = BaseRepository.Instance.Students.Single(x => x.Id == id);
+            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
             return course.Grades.Where(x => x.Student == student).ToList();
         }
 
@@ -65,7 +65,7 @@ namespace CollageRestAPI.Controllers
         public HttpResponseMessage PostStudents([FromBody]List<StudentModel> studentsToCreate)
         {
             //studentsToCreate.ForEach(x => x.Index = IdProvider.Instance.GetId());
-            BaseRepository.Instance.Students.AddRange(studentsToCreate);
+            BaseRepository.Instance.StudentsCollection.AddRange(studentsToCreate);
             HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.Created);
             response.Headers.Location = new Uri(Url.Content("~/api/Student"));
             return response;
@@ -75,7 +75,7 @@ namespace CollageRestAPI.Controllers
         [Route("{id}/Grades")]
         public HttpResponseMessage PostGrades(int id, [FromBody]List<GradeModel> gradesToAdd)
         {
-            var student = BaseRepository.Instance.Students.Single(x => x.Id == id);
+            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
             gradesToAdd.ForEach(x => x.Student = student);
             student.Grades.AddRange(gradesToAdd);
             return Request.CreateResponse(HttpStatusCode.Created);
@@ -89,8 +89,8 @@ namespace CollageRestAPI.Controllers
         [Route("{id}")]
         public HttpResponseMessage PutStudent(int id, [FromBody]StudentModel studentToUpdate)
         {
-            int studentIndex = BaseRepository.Instance.Students.FindIndex(x => x.Id == id);
-            BaseRepository.Instance.Students[studentIndex] = studentToUpdate;
+            int studentIndex = BaseRepository.Instance.StudentsCollection.FindIndex(x => x.Id == id);
+            BaseRepository.Instance.StudentsCollection[studentIndex] = studentToUpdate;
             return Request.CreateResponse(HttpStatusCode.OK);
         }
 
@@ -98,7 +98,7 @@ namespace CollageRestAPI.Controllers
         [Route("{id}/Grades/{issueYear}/{issueMonth}/{issueDay}")]
         public HttpResponseMessage PutGrade(int id, int issueYear, int issueMonth, int issueDay, [FromBody]GradeModel gradeToUpdate)
         {
-            var student = BaseRepository.Instance.Students.Find(x => x.Id == id);
+            var student = BaseRepository.Instance.StudentsCollection.Find(x => x.Id == id);
             DateTime incomingData = new DateTime(issueYear, issueMonth, issueDay);
             int gradeIndex = student.Grades.FindIndex(x => x.IssueDateTime == incomingData);
             student.Grades[gradeIndex] = gradeToUpdate;
@@ -113,7 +113,7 @@ namespace CollageRestAPI.Controllers
         [Route("{id}")]
         public HttpResponseMessage DeleteStudent(int id)
         {
-            var studentsList = BaseRepository.Instance.Students;
+            var studentsList = BaseRepository.Instance.StudentsCollection;
             studentsList.Remove(studentsList.Single(x => x.Id == id));
             return Request.CreateResponse(HttpStatusCode.OK);
         }
@@ -122,7 +122,7 @@ namespace CollageRestAPI.Controllers
         [Route("{id}/Grades/{issueYear}/{issueMonth}/{issueDay}")]
         public HttpResponseMessage DeleteGrade(int id, int issueYear, int issueMonth, int issueDay)
         {
-            var student = BaseRepository.Instance.Students.Single(x => x.Id == id);
+            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
             DateTime incomingData = new DateTime(issueYear, issueMonth, issueDay);
             student.Grades.Remove(student.Grades.Single(x => x.IssueDateTime == incomingData));
             return Request.CreateResponse(HttpStatusCode.OK);

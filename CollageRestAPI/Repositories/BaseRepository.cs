@@ -16,10 +16,10 @@ namespace CollageRestAPI.Repositories
         public static BaseRepository Instance { get { return lazy.Value; } }
         private BaseRepository(){}
 
-        public List<StudentModel> Students { get; set; } = new List<StudentModel>();
-        public List<CourseModel> Courses { get; set; } = new List<CourseModel>();
+        public List<StudentModel> StudentsCollection { get; set; } = new List<StudentModel>();
+        public List<CourseModel> CoursesCollection { get; set; } = new List<CourseModel>();
 
-        public MongoRepository<StudentModel, int> StudentsCollection { get; set; }
-        public MongoRepository<CourseModel, Guid> CoursesCollection { get; set; }
+        public MongoRepository<StudentModel, int> StudentsCollectiond { get; set; } = new MongoRepository<StudentModel, int>();
+        public MongoRepository<CourseModel, Guid> CoursesCollectiond { get; set; } = new MongoRepository<CourseModel, Guid>();
     }
 }
