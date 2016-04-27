@@ -25,6 +25,25 @@ namespace CollageRestAPI
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional }
+            );
+        }
+
+        public static class RoutingTemplates
+        {
+            //Root
+            public static string ApiRoot => "~/api";
+            //Students
+            public static string StudentsAll => "~/api/students/all";
+            public static string StudentById => "~/api/students/{id}";
+            public static string StudentGradesAll => "~/api/students/{id}/grades/all";
+            public static string StudentGradesByCourse => "~/api/students/{id}/grades/{courseName}";
+            public static string StudentGradeByIssueDate => "~/api/students/{id}/grades";
+            //Courses
+            public static string Courses => "~/api/courses";
         }
     }
 }
