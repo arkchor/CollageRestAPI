@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CollageRestAPI.Models;
 using CollageRestAPI.Providers;
 using CollageRestAPI.Repositories;
@@ -8,10 +9,17 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace CollageRestApi.Tests
 {
     [TestClass]
-    public class AddingToDatabaseTest
+    public class AddingToDbTest
     {
+        [TestInitialize]
+        public void Init()
+        {
+            NumberOfGettingIndexAttempts = 0;
+        }
+        public int NumberOfGettingIndexAttempts { get; set; }
         private int GetNewIndexFromIndexProvider()
         {
+            NumberOfGettingIndexAttempts++;
             return StudentIndexProvider.Instance.CurrentIndex;
         }
         private List<GradeModel> GetExampleGrades(int count)
@@ -43,6 +51,7 @@ namespace CollageRestApi.Tests
         private StudentModel GetExampleStudent()
         {
             var random = new Random();
+            NumberOfGettingIndexAttempts++;
             return new StudentModel
             {
                 Id = GetNewIndexFromIndexProvider(),
@@ -62,26 +71,37 @@ namespace CollageRestApi.Tests
         }
 
         [TestMethod]
-        public void AddToDatabase()
+        public void AddToDb()
         {
-            var grades = GetExampleGrades(5);
+            int gradesNumber = 5;
+            var grades = GetExampleGrades(gradesNumber);
             var student = GetExampleStudent();
             var course = GetExampleCourse();
 
-            grades.ForEach(x =>
-            {
-                x.Course = course;
-                x.Student = student;
-            });
+            //grades.ForEach(x =>
+            //{
+            //    x.Course = course;
+            //    x.Student = student;
+            //});
 
+            //student.Grades.AddRange(grades);
+            //student.Courses.Add(course);
+
+            //course.Grades.AddRange(grades);
+            //course.Students.Add(student);
+
+            course.Grades.AddRange(grades);
             student.Grades.AddRange(grades);
             student.Courses.Add(course);
 
-            course.Grades.AddRange(grades);
-            course.Students.Add(student);
-
+            BaseRepository.Instance.GradesCollection.Add(grades);
             BaseRepository.Instance.CoursesCollection.Add(course);
             BaseRepository.Instance.StudentsCollection.Add(student);
+
+            Assert.AreEqual(109500 + NumberOfGettingIndexAttempts, BaseRepository.Instance.CurrentIndexConfig.First().CurrentIndex);
+            Assert.AreEqual(1, BaseRepository.Instance.StudentsCollection.Count());
+            Assert.AreEqual(1, BaseRepository.Instance.CoursesCollection.Count());
+            Assert.AreEqual(gradesNumber, BaseRepository.Instance.GradesCollection.Count());
             //List<StudentModel> students = new List<StudentModel>();
             //for (var i = 0; i < 5; i++)
             //{

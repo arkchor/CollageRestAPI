@@ -49,13 +49,13 @@ namespace CollageRestAPI.Controllers
         //}
 
         // GET api/Student/id/Grades/courseName
-        [Route("{id}/Grades/{courseName}")]
-        public List<GradeModel> GetGradesByCourse(int id, string courseName)
-        {
-            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
-            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
-            return course.Grades.Where(x => x.Student == student).ToList();
-        }
+        //[Route("{id}/Grades/{courseName}")]
+        //public List<GradeModel> GetGradesByCourse(int id, string courseName)
+        //{
+        //    var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+        //    var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+        //    return course.Grades.Where(x => x.Student == student).ToList();
+        //}
 
         /*=======================================
         =========== POST METHODS ================
@@ -72,14 +72,14 @@ namespace CollageRestAPI.Controllers
         }
 
         // POST api/Student/id/Grades
-        [Route("{id}/Grades")]
-        public HttpResponseMessage PostGrades(int id, [FromBody]List<GradeModel> gradesToAdd)
-        {
-            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
-            gradesToAdd.ForEach(x => x.Student = student);
-            student.Grades.AddRange(gradesToAdd);
-            return Request.CreateResponse(HttpStatusCode.Created);
-        }
+        //[Route("{id}/Grades")]
+        //public HttpResponseMessage PostGrades(int id, [FromBody]List<GradeModel> gradesToAdd)
+        //{
+        //    var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+        //    gradesToAdd.ForEach(x => x.Student = student);
+        //    student.Grades.AddRange(gradesToAdd);
+        //    return Request.CreateResponse(HttpStatusCode.Created);
+        //}
 
         /*=======================================
         =========== PUT METHODS =================

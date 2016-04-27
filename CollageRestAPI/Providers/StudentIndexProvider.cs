@@ -19,6 +19,11 @@ namespace CollageRestAPI.Providers
             PullCurrentIndexFromDb();
         }
 
+        public int ShowCurrentIndex()
+        {
+            return _currentIndex;
+        }
+
         private int _currentIndex;
 
         public int CurrentIndex

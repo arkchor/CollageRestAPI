@@ -16,11 +16,11 @@ namespace CollageRestAPI.Models
         public Guid Id { get; set; }
         public double Value { get; set; }
         public DateTime IssueDateTime { get; set; }
-        [IgnoreDataMember]
-        [BsonIgnore]
-        public StudentModel Student { get; set; } = new StudentModel();
-        [IgnoreDataMember]
-        [BsonIgnore]
-        public CourseModel Course { get; set; } = new CourseModel();
+        //[IgnoreDataMember]
+        //[BsonIgnore]
+        //public StudentModel Student { get; set; } = new StudentModel();
+        //[IgnoreDataMember]
+        //[BsonIgnore]
+        //public CourseModel Course { get; set; } = new CourseModel();
     }
 }

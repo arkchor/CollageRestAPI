@@ -61,16 +61,16 @@ namespace CollageRestAPI.Controllers
         }
 
         // POST api/Course/courseName/id
-        [Route("{courseName}/{id}")]
-        public HttpResponseMessage PostGrades(string courseName, int id, [FromBody]List<GradeModel> gradesToAdd)
-        {
-            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
-            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
-            gradesToAdd.ForEach(x => x.Student = student);
-            course.Grades.AddRange(gradesToAdd);
-            student.Grades.AddRange(gradesToAdd);
-            return Request.CreateResponse(HttpStatusCode.Created);
-        }
+        //[Route("{courseName}/{id}")]
+        //public HttpResponseMessage PostGrades(string courseName, int id, [FromBody]List<GradeModel> gradesToAdd)
+        //{
+        //    var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+        //    var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+        //    gradesToAdd.ForEach(x => x.Student = student);
+        //    course.Grades.AddRange(gradesToAdd);
+        //    student.Grades.AddRange(gradesToAdd);
+        //    return Request.CreateResponse(HttpStatusCode.Created);
+        //}
 
         /*=======================================
         =========== PUT METHODS =================

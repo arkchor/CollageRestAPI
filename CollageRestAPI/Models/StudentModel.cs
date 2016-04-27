@@ -11,7 +11,7 @@ namespace CollageRestAPI.Models
 {
     //[DataContract(IsReference = true)]
     [CollectionName("students")]
-    public class StudentModel : IEntity<int>, ISupportInitialize
+    public class StudentModel : IEntity<int>
     {
         //if (Enumerable.Range(1, 999999).Contains(value))
         [BsonId]
@@ -22,14 +22,6 @@ namespace CollageRestAPI.Models
         [IgnoreDataMember]
         public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
         [IgnoreDataMember]
-        [BsonIgnore]
         public List<CourseModel> Courses { get; set; } = new List<CourseModel>();
-
-        public void BeginInit(){}
-
-        public void EndInit()
-        {
-            
-        }
     }
 }
