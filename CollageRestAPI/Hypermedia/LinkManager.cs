@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web.Http.Routing;
 using System.Linq;
 using System.Web;
 
@@ -12,13 +13,13 @@ namespace CollageRestAPI.Hypermedia
             return null;
         }
 
-        public static List<Link> SingleStudentLinks(int id)
+        public static List<Link> SingleStudentLinks(UrlHelper urlHelper)
         {
             return new List<Link>
             {
-                LinkTemplates.Students.GetStudentByIdLink(id),
-                LinkTemplates.Students.GetStudentGradesLink(id),
-                LinkTemplates.Students.GetStudentCoursesLink(id)
+                LinkTemplates.Students.GetStudentByIdLink(urlHelper),
+                LinkTemplates.Students.GetStudentGradesLink(urlHelper),
+                LinkTemplates.Students.GetStudentCoursesLink(urlHelper)
             };
         }
     }

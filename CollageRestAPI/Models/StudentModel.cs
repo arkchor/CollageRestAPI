@@ -24,6 +24,6 @@ namespace CollageRestAPI.Models
         public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
         //[IgnoreDataMember]
         public List<CourseModel> Courses { get; set; } = new List<CourseModel>();
-        public List<Link> Links { get; set; }
+        public List<Link> Links { get; set; } = new List<Link>();
     }
 }
