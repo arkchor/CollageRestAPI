@@ -10,7 +10,10 @@ namespace CollageRestAPI.Hypermedia
     {
         public static List<Link> InitialLinks()
         {
-            return null;
+            return new List<Link>
+            {
+                
+            };
         }
 
         public static List<Link> SingleStudentLinks(UrlHelper urlHelper, int id)

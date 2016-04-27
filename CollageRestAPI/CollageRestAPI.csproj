@@ -218,6 +218,7 @@
     <Compile Include="App_Start\IndexConfig.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\CoursesOldController.cs" />
+    <Compile Include="Controllers\HomeApiController.cs" />
     <Compile Include="Controllers\Interfaces\ICourseController.cs" />
     <Compile Include="Controllers\Interfaces\IStudentsController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
