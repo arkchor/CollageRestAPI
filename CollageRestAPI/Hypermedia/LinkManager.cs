@@ -13,13 +13,15 @@ namespace CollageRestAPI.Hypermedia
             return null;
         }
 
-        public static List<Link> SingleStudentLinks(UrlHelper urlHelper)
+        public static List<Link> SingleStudentLinks(UrlHelper urlHelper, int id)
         {
             return new List<Link>
             {
-                LinkTemplates.Students.GetStudentByIdLink(urlHelper),
-                LinkTemplates.Students.GetStudentGradesLink(urlHelper),
-                LinkTemplates.Students.GetStudentCoursesLink(urlHelper)
+                LinkTemplates.Students.GetStudentByIdLink(urlHelper, id),
+                LinkTemplates.Students.GetStudentGradesLink(urlHelper, id),
+                LinkTemplates.Students.GetStudentCoursesLink(urlHelper, id),
+                LinkTemplates.Students.DeleteStudentByIdLink(urlHelper, id),
+                LinkTemplates.Students.UpdateStudentByIdLink(urlHelper, id)
             };
         }
     }

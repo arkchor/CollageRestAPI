@@ -217,11 +217,11 @@
   <ItemGroup>
     <Compile Include="App_Start\IndexConfig.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
-    <Compile Include="Controllers\Students\Interfaces\ICourseController.cs" />
-    <Compile Include="Controllers\Students\Interfaces\IStudentController.cs" />
-    <Compile Include="Controllers\Students\Interfaces\ICollectionsController.cs" />
-    <Compile Include="Controllers\Students\StudentController.cs" />
-    <Compile Include="Controllers\Students\StudentsCollectionController.cs" />
+    <Compile Include="Controllers\CoursesOldController.cs" />
+    <Compile Include="Controllers\Interfaces\ICourseController.cs" />
+    <Compile Include="Controllers\Interfaces\IStudentsController.cs" />
+    <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Controllers\StudentsCollectionController.cs" />
     <Compile Include="Hypermedia\LinkManager.cs" />
     <Compile Include="Hypermedia\LinkTemplates.cs" />
     <Compile Include="Models\CourseModel.cs" />

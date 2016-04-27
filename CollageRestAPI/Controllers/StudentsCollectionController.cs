@@ -7,10 +7,10 @@ using System.Web.Http;
 using CollageRestAPI.Models;
 using CollageRestAPI.Repositories;
 
-namespace CollageRestAPI.Controllers.Students
+namespace CollageRestAPI.Controllers
 {
     [RoutePrefix("api/Students")]
-    public class StudentsController : ApiController
+    public class StudentsoldController : ApiController
     {
         /*=======================================
         =========== GET METHODS =================
