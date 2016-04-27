@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CollageRestAPI.Models;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoRepository;
 
@@ -21,6 +22,6 @@ namespace CollageRestAPI.Repositories
 
         public MongoRepository<StudentModel, int> StudentsCollection { get; set; } = new MongoRepository<StudentModel, int>();
         public MongoRepository<CourseModel, Guid> CoursesCollection { get; set; } = new MongoRepository<CourseModel, Guid>();
-        public MongoRepository<IndexConfig, Guid> CurrentIndexConfig { get; set; } = new MongoRepository<IndexConfig, Guid>();
+        public MongoRepository<IndexConfig, ObjectId> CurrentIndexConfig { get; set; } = new MongoRepository<IndexConfig, ObjectId>();
     }
 }

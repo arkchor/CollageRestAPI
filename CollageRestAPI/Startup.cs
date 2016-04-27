@@ -47,11 +47,22 @@ namespace CollageRestAPI
             List<StudentModel> students = new List<StudentModel>();
             for (var i = 0; i < 5; i++)
             {
+                //var grades = new List<GradeModel>();
+                //for (int j = 2; j < 5; j++)
+                //{
+                //    grades.Add(new GradeModel() {Value = j});
+                //}
+                
+                //};
                 var student = new StudentModel
                 {
                     FirstName = "imie" + i,
                     LastName = "nazwisko" + i,
                     Id = StudentIndexProvider.Instance.CurrentIndex
+                };
+                var course = new CourseModel()
+                {
+
                 };
                 students.Add(student);
             }

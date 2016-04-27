@@ -222,6 +222,7 @@
     <Compile Include="Models\GradeModel.cs" />
     <Compile Include="Models\StudentModel.cs" />
     <Compile Include="Providers\StudentIndexProvider.cs" />
+    <Compile Include="ReferencesResolver.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />

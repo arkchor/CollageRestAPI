@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
@@ -10,7 +11,7 @@ namespace CollageRestAPI.Models
 {
     //[DataContract(IsReference = true)]
     [CollectionName("students")]
-    public class StudentModel : IEntity<int>
+    public class StudentModel : IEntity<int>, ISupportInitialize
     {
         //if (Enumerable.Range(1, 999999).Contains(value))
         [BsonId]
@@ -21,6 +22,14 @@ namespace CollageRestAPI.Models
         [IgnoreDataMember]
         public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
         [IgnoreDataMember]
+        [BsonIgnore]
         public List<CourseModel> Courses { get; set; } = new List<CourseModel>();
+
+        public void BeginInit(){}
+
+        public void EndInit()
+        {
+            
+        }
     }
 }
