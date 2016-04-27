@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
+using CollageRestAPI.Hypermedia;
 using MongoRepository;
 
 namespace CollageRestAPI.Models
@@ -19,6 +20,7 @@ namespace CollageRestAPI.Models
         public string Tutor { get; set; }
         //[IgnoreDataMember]
         public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
+        public List<Link> Links { get; set; }
         //[IgnoreDataMember]
         //public List<StudentModel> Students { get; set; } = new List<StudentModel>();
     }

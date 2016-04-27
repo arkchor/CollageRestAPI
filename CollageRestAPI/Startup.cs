@@ -19,8 +19,8 @@ namespace CollageRestAPI
     {
         public void Configuration(IAppBuilder app)
         {
-            DbInit();
-            DbTest();
+            //DbInit();
+            //DbTest();
             ConfigureAuth(app);
         }
 

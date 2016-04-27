@@ -5,10 +5,9 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using CollageRestAPI.Models;
-using CollageRestAPI.Providers;
 using CollageRestAPI.Repositories;
 
-namespace CollageRestAPI.Controllers
+namespace CollageRestAPI.Controllers.Students
 {
     [RoutePrefix("api/Students")]
     public class StudentsController : ApiController
@@ -21,7 +20,6 @@ namespace CollageRestAPI.Controllers
         [HttpGet, Route("")]
         public IHttpActionResult GetStudents()
         {
-
             return Ok(BaseRepository.Instance.StudentsCollection);
         }
 

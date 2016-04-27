@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
+using CollageRestAPI.Hypermedia;
 using MongoRepository;
 
 namespace CollageRestAPI.Models
@@ -16,6 +17,7 @@ namespace CollageRestAPI.Models
         public Guid Id { get; set; }
         public double Value { get; set; }
         public DateTime IssueDateTime { get; set; }
+        public List<Link> Links { get; set; }
         //[IgnoreDataMember]
         //[BsonIgnore]
         //public StudentModel Student { get; set; } = new StudentModel();
