@@ -19,9 +19,9 @@ namespace CollageRestAPI.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BornDate { get; set; }
-        [IgnoreDataMember]
+        //[IgnoreDataMember]
         public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
-        [IgnoreDataMember]
+        //[IgnoreDataMember]
         public List<CourseModel> Courses { get; set; } = new List<CourseModel>();
     }
 }
