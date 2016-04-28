@@ -18,10 +18,10 @@ namespace CollageRestAPI.Controllers
         =======================================*/
 
         // GET api/Course
-        public MongoRepository<CourseModel, Guid> GetCourses()
-        {
-            return BaseRepository.Instance.CoursesCollection;
-        }
+        //public MongoRepository<CourseModel, Guid> GetCourses()
+        //{
+        //    return BaseRepository.Instance.CoursesCollection;
+        //}
 
         // GET api/Course/courseName
         [Route("{courseName}")]

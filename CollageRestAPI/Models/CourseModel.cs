@@ -6,16 +6,17 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 using CollageRestAPI.Hypermedia;
+using MongoDB.Bson;
 using MongoRepository;
 
 namespace CollageRestAPI.Models
 {
     //[DataContract(IsReference = true)]
-    [CollectionName("courses")]
-    public class CourseModel : IEntity<Guid>
+    [CollectionName(DatabaseConfig.CoursesCollectionName)]
+    public class CourseModel : IEntity<ObjectId>
     {
         [BsonId]
-        public Guid Id { get; set; }
+        public ObjectId Id { get; set; }
         public string CourseName { get; set; }
         public string Tutor { get; set; }
         //[IgnoreDataMember]

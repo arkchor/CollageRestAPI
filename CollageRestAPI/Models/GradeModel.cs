@@ -5,19 +5,25 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 using CollageRestAPI.Hypermedia;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using MongoRepository;
 
 namespace CollageRestAPI.Models
 {
     //[DataContract(IsReference = true)]
-    [CollectionName("grades")]
-    public class GradeModel : IEntity<Guid>
+    [CollectionName(DatabaseConfig.GradesCollectionName)]
+    public class GradeModel : IEntity<ObjectId>
     {
         [BsonId]
-        public Guid Id { get; set; }
+        public ObjectId Id { get; set; }
         public double Value { get; set; }
         public DateTime IssueDateTime { get; set; }
         public List<Link> Links { get; set; }
+        [IgnoreDataMember]
+        [BsonIgnore]
+        public StudentModel Student { get; set; }
+        public MongoDBRef StudentReference { get; set; }
         //[IgnoreDataMember]
         //[BsonIgnore]
         //public StudentModel Student { get; set; } = new StudentModel();

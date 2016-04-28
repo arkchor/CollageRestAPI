@@ -5,6 +5,7 @@ using CollageRestAPI.Models;
 using CollageRestAPI.Providers;
 using CollageRestAPI.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MongoDB.Bson;
 
 namespace CollageRestApi.Tests
 {
@@ -31,7 +32,7 @@ namespace CollageRestApi.Tests
             {
                 grades.Add(new GradeModel
                 {
-                    Id = new Guid(),
+                    //Id = new ObjectId(),
                     Value = random.Next(2,5),
                     IssueDateTime = new DateTime(random.Next(2000,2016), random.Next(1,12), random.Next(1,28))
                 });
@@ -43,7 +44,7 @@ namespace CollageRestApi.Tests
             var random = new Random();
             return new CourseModel
             {
-                Id = new Guid(),
+                //Id = new Guid(),
                 CourseName = $"przedmiot{random.Next(1, 100)}",
                 Tutor = $"nauczyciel{random.Next(1, 100)}"
             };
@@ -89,12 +90,13 @@ namespace CollageRestApi.Tests
 
             //course.Grades.AddRange(grades);
             //course.Students.Add(student);
-
-            course.Grades.AddRange(grades);
-            student.Grades.AddRange(grades);
+            //BaseRepository.Instance.GradesCollection.Add(grades);
+            //course.Grades.AddRange(grades);
+            //student.Grades.AddRange(grades);
+            student.AddGrades(grades);
             student.Courses.Add(course);
 
-            BaseRepository.Instance.GradesCollection.Add(grades);
+            
             BaseRepository.Instance.CoursesCollection.Add(course);
             BaseRepository.Instance.StudentsCollection.Add(student);
 

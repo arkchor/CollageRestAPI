@@ -67,6 +67,7 @@
     <Compile Include="AddingToDbTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemovingFromDbTest.cs" />
+    <Compile Include="FetchingFromDbTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CollageRestAPI\CollageRestAPI.csproj">
