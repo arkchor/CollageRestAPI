@@ -14,7 +14,7 @@ namespace CollageRestAPI.Controllers
         [HttpGet]
         [Route("")]
         public IHttpActionResult GetHomeApi()
-        {
+        {        
             return Ok(LinkManager.InitialLinks());
         }
     }
