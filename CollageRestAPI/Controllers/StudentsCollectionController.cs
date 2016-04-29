@@ -9,7 +9,7 @@ using CollageRestAPI.Repositories;
 
 namespace CollageRestAPI.Controllers
 {
-    [RoutePrefix("api/Students")]
+    [RoutePrefix("api/Studentsx")]
     public class StudentsoldController : ApiController
     {
         /*=======================================

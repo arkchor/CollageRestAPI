@@ -11,6 +11,7 @@ namespace CollageRestAPI.Providers
 {
     public class StudentIndexProvider
     {
+        private Object forLock = new object();
         private static readonly Lazy<StudentIndexProvider> lazy =
         new Lazy<StudentIndexProvider>(() => new StudentIndexProvider());
         public static StudentIndexProvider Instance { get { return lazy.Value; } }
@@ -30,9 +31,12 @@ namespace CollageRestAPI.Providers
         {
             get
             {
-                _currentIndex++;
-                IndexConfig.Instance.CurrentIndex = _currentIndex;
-                BaseRepository.Instance.CurrentIndexConfig.Update(IndexConfig.Instance);            
+                lock (forLock)
+                {
+                    _currentIndex++;
+                    IndexConfig.Instance.CurrentIndex = _currentIndex;
+                    BaseRepository.Instance.CurrentIndexConfig.Update(IndexConfig.Instance);
+                }
                 //System.Diagnostics.Debug.WriteLine("======111========= " + _currentIndex + " ========111=======");
                 //var collection = BaseRepository.Instance.Db.GetCollection<BsonDocument>("studentindexprovider");
                 ////var filter = Builders<BsonDocument>.Filter.

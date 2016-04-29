@@ -5,36 +5,63 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using CollageRestAPI.Controllers.Interfaces;
+using CollageRestAPI.Hypermedia;
 using CollageRestAPI.Models;
+using CollageRestAPI.Repositories;
+using WebGrease.Css.Extensions;
 
 namespace CollageRestAPI.Controllers
 {
     [RoutePrefix("api/courses")]
     public class CoursesController : ApiController, ICourseController
     {
+        [HttpGet, Route(Name = "GetCoursesCollection")]
         public IHttpActionResult GetCoursesCollection()
         {
-            throw new NotImplementedException();
+            return Ok(BaseRepository.Instance.CoursesCollection);
+
         }
 
+        [HttpGet, Route("{courseName}", Name = "GetCourseByName")]
         public IHttpActionResult GetCourseByName(string courseName)
         {
-            throw new NotImplementedException();
+            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+            course.Links = LinkManager.SingleCourseLinks(Url, course.CourseName);
+
+            return Ok(course);
         }
 
+        [HttpGet, Route("{courseName}/students", Name = "GetCourseStudents")]
         public IHttpActionResult GetCourseStudents(string courseName)
         {
-            throw new NotImplementedException();
+            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+            var students = new List<StudentModel>();
+            var studentsCollection = BaseRepository.Instance.StudentsCollection;
+
+            studentsCollection.ForEach(student =>
+            {
+                if (student.Courses.Contains(course))
+                {
+                    students.Add(student);
+                }
+            });
+
+            return Ok(students);
         }
 
+        [HttpGet, Route("{courseName}/grades", Name = "GetCourseGrades")]
         public IHttpActionResult GetCourseGrades(string courseName)
         {
             throw new NotImplementedException();
         }
 
+        [HttpPost, Route(Name = "CreateCourse")]
         public IHttpActionResult CreateCourse(CourseModel courseToCreate)
         {
-            throw new NotImplementedException();
+            courseToCreate.Links = LinkManager.SingleCourseLinks(Url, courseToCreate.CourseName);
+            BaseRepository.Instance.CoursesCollection.Add(courseToCreate);
+
+            return Created(LinkTemplates.Courses.GetCourseByNameLink(Url, courseToCreate.CourseName).Href, "");
         }
 
         public IHttpActionResult CreateGradeForStudent(int id, GradeModel gradeToCreate)
@@ -42,6 +69,7 @@ namespace CollageRestAPI.Controllers
             throw new NotImplementedException();
         }
 
+        [HttpPut, Route(Name = "UpdateCourseByName")]
         public IHttpActionResult UpdateCourse(string courseName, CourseModel courseToUpdate)
         {
             throw new NotImplementedException();
@@ -52,6 +80,7 @@ namespace CollageRestAPI.Controllers
             throw new NotImplementedException();
         }
 
+        [HttpDelete, Route(Name = "DeleteCourseByName")]
         public IHttpActionResult DeleteCourse(string courseName)
         {
             throw new NotImplementedException();

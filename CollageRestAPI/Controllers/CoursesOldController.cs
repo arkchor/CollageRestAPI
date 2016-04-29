@@ -10,7 +10,7 @@ using MongoRepository;
 
 namespace CollageRestAPI.Controllers
 {
-    [RoutePrefix("api/Course")]
+    [RoutePrefix("api/Coursex")]
     public class CoursesOldController : ApiController
     {
         /*=======================================

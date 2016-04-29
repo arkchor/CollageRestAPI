@@ -26,10 +26,10 @@ namespace CollageRestAPI.Models
         [IgnoreDataMember]
         [BsonIgnore]
         public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
+        [IgnoreDataMember]
         public List<MongoDBRef> GradesReferences { get; set; } = new List<MongoDBRef>();
         public void AddGrades(List<GradeModel> grades)
         {          
-            BaseRepository.Instance.GradesCollection.Add(grades);
             Grades.AddRange(grades);
             grades.ForEach(grade => GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, grade.Id)));
         }
@@ -37,6 +37,7 @@ namespace CollageRestAPI.Models
         [IgnoreDataMember]
         [BsonIgnore]
         public List<CourseModel> Courses { get; set; } = new List<CourseModel>();
+        [IgnoreDataMember]
         public List<MongoDBRef> CoursesReferences { get; set; } = new List<MongoDBRef>();
         public void AddCourses(List<CourseModel> courses)
         {

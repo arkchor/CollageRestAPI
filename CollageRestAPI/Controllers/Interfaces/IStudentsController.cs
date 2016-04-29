@@ -11,7 +11,7 @@ namespace CollageRestAPI.Controllers.Interfaces
         IHttpActionResult GetStudentById(int id);
         IHttpActionResult GetStudentGrades(int id);
         IHttpActionResult GetStudentGradesByCourse(int id, string courseName);
-        IHttpActionResult GetStudentGradeByIssueDate(int id, DateTime issueDate);
+        //IHttpActionResult GetStudentGradeByIssueDate(int id, DateTime issueDate);
         IHttpActionResult GetStudentCourses(int id);
 
         //=== POST METHODS ===//

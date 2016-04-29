@@ -12,7 +12,9 @@ namespace CollageRestAPI.Hypermedia
         {
             return new List<Link>
             {
-                
+                LinkTemplates.Students.GetStudentsCollectionLink(),
+                LinkTemplates.Courses.GetCoursesCollectionLink(),
+                LinkTemplates.Grades.GetGradesCollectionLink()
             };
         }
 
@@ -25,6 +27,18 @@ namespace CollageRestAPI.Hypermedia
                 LinkTemplates.Students.GetStudentCoursesLink(urlHelper, id),
                 LinkTemplates.Students.DeleteStudentByIdLink(urlHelper, id),
                 LinkTemplates.Students.UpdateStudentByIdLink(urlHelper, id)
+            };
+        }
+
+        public static List<Link> SingleCourseLinks(UrlHelper urlHelper, string name)
+        {
+            return new List<Link>
+            {
+                LinkTemplates.Courses.GetCourseByNameLink(urlHelper, name),
+                LinkTemplates.Courses.GetCourseGradesLink(urlHelper, name),
+                LinkTemplates.Courses.GetCourseStudentsLink(urlHelper, name),
+                LinkTemplates.Courses.DeleteCourseByNameLink(urlHelper, name),
+                LinkTemplates.Courses.UpdateCourseByNameLink(urlHelper, name)
             };
         }
     }

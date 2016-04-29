@@ -16,7 +16,7 @@ namespace CollageRestAPI.Controllers
         /*=======================================
         =========== GET METHODS =================
         =======================================*/
-        [HttpGet, Route("all", Name = "GetStudentsCollection")]
+        [HttpGet, Route(Name = "GetStudentsCollection")]
         public IHttpActionResult GetStudentsCollection()
         {
             return Ok(BaseRepository.Instance.StudentsCollection);
@@ -36,7 +36,7 @@ namespace CollageRestAPI.Controllers
 
             return Ok(student);
         }
-        [HttpGet, Route("{id}/grades/all", Name = "GetStudentGrades")]
+        [HttpGet, Route("{id}/grades", Name = "GetStudentGrades")]
         public IHttpActionResult GetStudentGrades(int id)
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
@@ -52,14 +52,14 @@ namespace CollageRestAPI.Controllers
 
             return Ok(grades);
         }
-        [HttpGet, Route("{id}/grades", Name = "GetStudentGradeByIssueDate")]
-        public IHttpActionResult GetStudentGradeByIssueDate(int id, [FromBody]DateTime issueDate)
-        {
-            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
-            var grade = student.Grades.Where(x => x.IssueDateTime.Date == issueDate.Date && x.IssueDateTime.Hour == issueDate.Hour && x.IssueDateTime.Minute == issueDate.Minute).ToList();
+        //[HttpGet, Route("{id}/grades", Name = "GetStudentGradeByIssueDate")]
+        //public IHttpActionResult GetStudentGradeByIssueDate(int id, [FromBody]DateTime issueDate)
+        //{
+        //    var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+        //    var grade = student.Grades.Where(x => x.IssueDateTime.Date == issueDate.Date && x.IssueDateTime.Hour == issueDate.Hour && x.IssueDateTime.Minute == issueDate.Minute).ToList();
 
-            return Ok(grade);
-        }
+        //    return Ok(grade);
+        //}
 
         [HttpGet, Route("{id}/courses", Name = "GetStudentCourses")]
         public IHttpActionResult GetStudentCourses(int id)
