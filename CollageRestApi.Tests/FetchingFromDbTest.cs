@@ -13,8 +13,8 @@ namespace CollageRestApi.Tests
         public void FetchFromDb()
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == 109502);
-            Debug.WriteLine($"{student.Id} {student.FirstName} {student.Grades.Count}");
-            student.Grades.ForEach(grade => Debug.WriteLine($"{grade.Id} {grade.Value}"));
+            //Debug.WriteLine($"{student.Id} {student.FirstName} {student.Grades.Count}");
+            //student.Grades.ForEach(grade => Debug.WriteLine($"{grade.Id} {grade.Value}"));
         }
     }
 }

@@ -38,13 +38,13 @@ namespace CollageRestAPI.Controllers
             var students = new List<StudentModel>();
             var studentsCollection = BaseRepository.Instance.StudentsCollection;
 
-            studentsCollection.ForEach(student =>
-            {
-                if (student.Courses.Contains(course))
-                {
-                    students.Add(student);
-                }
-            });
+            //studentsCollection.ForEach(student =>
+            //{
+            //    if (student.Courses.Contains(course))
+            //    {
+            //        students.Add(student);
+            //    }
+            //});
 
             return Ok(students);
         }

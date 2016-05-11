@@ -29,16 +29,16 @@ namespace CollageRestAPI.Models
         public List<Link> Links { get; set; }
 
 
-        [BsonIgnore]
-        [IgnoreDataMember]
-        public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
-        public void AddGrades(List<GradeModel> grades)
-        {
-            Grades.AddRange(grades);
-            grades.ForEach(grade => GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, grade.Id)));
-        }
-        [IgnoreDataMember]
-        public List<StudentModel> Students { get; set; } = new List<StudentModel>();
+        //[BsonIgnore]
+        //[IgnoreDataMember]
+        //public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
+        //public void AddGrades(List<GradeModel> grades)
+        //{
+        //    Grades.AddRange(grades);
+        //    grades.ForEach(grade => GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, grade.Id)));
+        //}
+        //[IgnoreDataMember]
+        //public List<StudentModel> Students { get; set; } = new List<StudentModel>();
 
         //public void BeginInit()
         //{

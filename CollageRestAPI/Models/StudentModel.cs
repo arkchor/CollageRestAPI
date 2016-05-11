@@ -26,29 +26,28 @@ namespace CollageRestAPI.Models
         public List<MongoDBRef> GradesReferences { get; set; } = new List<MongoDBRef>();
         [IgnoreDataMember]
         public List<MongoDBRef> CoursesReferences { get; set; } = new List<MongoDBRef>();
-        [BsonIgnore]
         public List<Link> Links { get; set; } = new List<Link>();
 
-        [IgnoreDataMember]
-        [BsonIgnore]
-        public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
+        //[IgnoreDataMember]
+        //[BsonIgnore]
+        //public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
 
-        public void AddGrades(List<GradeModel> grades)
-        {
-            Grades.AddRange(grades);
-            grades.ForEach(grade => GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, grade.Id)));
-        }
+        //public void AddGrades(List<GradeModel> grades)
+        //{
+        //    Grades.AddRange(grades);
+        //    grades.ForEach(grade => GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, grade.Id)));
+        //}
 
-        [IgnoreDataMember]
-        [BsonIgnore]
-        public List<CourseModel> Courses { get; set; } = new List<CourseModel>();
+        //[IgnoreDataMember]
+        //[BsonIgnore]
+        //public List<CourseModel> Courses { get; set; } = new List<CourseModel>();
 
-        public void AddCourses(List<CourseModel> courses)
-        {
-            BaseRepository.Instance.CoursesCollection.Add(courses);
-            Courses.AddRange(courses);
-            courses.ForEach(course => CoursesReferences.Add(new MongoDBRef(DatabaseConfig.CoursesCollectionName, course.Id)));
-        }
+        //public void AddCourses(List<CourseModel> courses)
+        //{
+        //    BaseRepository.Instance.CoursesCollection.Add(courses);
+        //    Courses.AddRange(courses);
+        //    courses.ForEach(course => CoursesReferences.Add(new MongoDBRef(DatabaseConfig.CoursesCollectionName, course.Id)));
+        //}
 
         //public void BeginInit()
         //{

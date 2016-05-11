@@ -19,10 +19,10 @@ namespace CollageRestAPI.Controllers.Interfaces
 
         //=== PUT METHODS ===//
         IHttpActionResult UpdateStudentById(int id, StudentModel studentToUpdate);
-        IHttpActionResult UpdateCourses(int id, CourseModel courseToAdd);
+        //IHttpActionResult UpdateCourses(int id, CourseModel courseToAdd);
 
         //=== DELETE METHODS ===//
         IHttpActionResult DeleteStudentById(int id);
-        IHttpActionResult DeleteCourse(int id, string courseName);
+        //IHttpActionResult DeleteCourse(int id, string courseName);
     }
 }

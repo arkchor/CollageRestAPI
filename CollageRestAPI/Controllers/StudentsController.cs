@@ -27,13 +27,6 @@ namespace CollageRestAPI.Controllers
         public IHttpActionResult GetStudentById(int id)
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
-            //student.Links = new List<Link>
-            //{
-            //    LinkTemplates.Students.GetStudentByIdLink(Url.Link("GetStudentById", new {id = student.Id})),
-            //    LinkTemplates.Students.GetStudentGradesLink(Url.Link("GetStudentGrades", new {id = student.Id})),
-            //    LinkTemplates.Students.GetStudentCoursesLink(Url.Link("GetStudentCourses", new {id = student.Id}))
-            //};
-            student.Links = LinkManager.SingleStudentLinks(Url, student.Id);
 
             return Ok(student);
         }
@@ -42,15 +35,21 @@ namespace CollageRestAPI.Controllers
         public IHttpActionResult GetStudentGrades(int id)
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+            var grades = new List<GradeModel>();
+            student.GradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));
 
-            return Ok(student.Grades);
+            return Ok(grades);
         }
-        [HttpGet, Route("{id}/grades/{courseName}", Name = "GetStudentGradesByCourse")]
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGradesByCourse")]
         public IHttpActionResult GetStudentGradesByCourse(int id, string courseName)
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
             var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
-            var grades = student.Grades.Where(grade => course.Grades.Contains(grade)).ToList();
+            var gradesReferences =
+                student.GradesReferences.Where(gradeReference => course.GradesReferences.Contains(gradeReference)).ToList();
+            //var gradess = student.Grades.Where(grade => course.Grades.Contains(grade)).ToList();
+            var grades = new List<GradeModel>();
+            gradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));
 
             return Ok(grades);
         }
@@ -63,31 +62,33 @@ namespace CollageRestAPI.Controllers
         //    return Ok(grade);
         //}
 
-        [HttpGet, Route("{id}/courses", Name = "GetStudentCourses")]
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentCourses, Name = "GetStudentCourses")]
         public IHttpActionResult GetStudentCourses(int id)
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+            var courses = new List<CourseModel>();
+            student.CoursesReferences.ForEach(courseReference => courses.Add(BaseRepository.Instance.Fetch<CourseModel>(courseReference)));
 
-            return Ok(student.Courses);
+            return Ok(courses);
         }
 
         /*=======================================
         =========== POST METHODS ================
         =======================================*/
-        [HttpPost, Route(Name = "CreateStudent")]
+        [HttpPost, Route(WebApiConfig.RoutesTemplates.Students, Name = "CreateStudent")]
         public IHttpActionResult CreateStudent([FromBody]StudentModel studentToCreate)
         {
             studentToCreate.Id = StudentIndexProvider.Instance.CurrentIndex;
             studentToCreate.Links = LinkManager.SingleStudentLinks(Url, studentToCreate.Id);
             BaseRepository.Instance.StudentsCollection.Add(studentToCreate);
 
-            return Created(LinkTemplates.Students.GetStudentByIdLink(Url, studentToCreate.Id).Href,"");
+            return Created(LinkTemplates.Students.GetStudentByIdLink(Url, studentToCreate.Id).Href, string.Empty);
         }
 
         /*=======================================
         =========== PUT METHODS =================
         =======================================*/
-        [HttpPut, Route("{id}", Name = "UpdateStudentById")]
+        [HttpPut, Route(WebApiConfig.RoutesTemplates.Students, Name = "UpdateStudentById")]
         public IHttpActionResult UpdateStudentById(int id, [FromBody]StudentModel studentToUpdate)
         {
             //var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
@@ -102,26 +103,26 @@ namespace CollageRestAPI.Controllers
 
             return Ok();
         }
-        [HttpGet, Route("{id}/course", Name = "GetStudentByIdd")]
-        public IHttpActionResult UpdateCourses(int id, [FromBody]CourseModel courseToAdd)
-        {
-            throw new NotImplementedException();
-        }
+        //[HttpPut, Route(WebApiConfig.RoutesTemplates.StudentCourses, Name = "UpdateStudentCourse")]
+        //public IHttpActionResult UpdateCourses(int id, [FromBody]CourseModel courseToAdd)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         /*=======================================
         =========== DELETE METHODS ==============
         =======================================*/
-        [HttpDelete, Route("{id}", Name = "DeleteStudentById")]
+        [HttpDelete, Route(WebApiConfig.RoutesTemplates.Students, Name = "DeleteStudentById")]
         public IHttpActionResult DeleteStudentById(int id)
         {
             BaseRepository.Instance.StudentsCollection.Delete(id);
 
             return Ok();
         }
-        [HttpGet, Route("{id}", Name = "GetStudentByIdsd")]
-        public IHttpActionResult DeleteCourse(int id, string courseName)
-        {
-            throw new NotImplementedException();
-        }
+        //[HttpGet, Route("{id}", Name = "GetStudentByIdsd")]
+        //public IHttpActionResult DeleteCourse(int id, string courseName)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

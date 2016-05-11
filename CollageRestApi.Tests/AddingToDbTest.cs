@@ -94,8 +94,8 @@ namespace CollageRestApi.Tests
             //course.Grades.AddRange(grades);
             //student.Grades.AddRange(grades);
             BaseRepository.Instance.GradesCollection.Add(grades);
-            student.AddGrades(grades);
-            student.Courses.Add(course);
+            //student.AddGrades(grades);
+            //student.Courses.Add(course);
 
             
             BaseRepository.Instance.CoursesCollection.Add(course);
