@@ -15,7 +15,7 @@ namespace CollageRestAPI.Models
 {
     //[DataContract(IsReference = true)]
     [CollectionName(DatabaseConfig.CoursesCollectionName)]
-    public class CourseModel : IEntity<ObjectId>
+    public class CourseModel : IEntity<ObjectId>, ISupportInitialize
     {
         [BsonId]
         public ObjectId Id { get; set; }
@@ -36,5 +36,15 @@ namespace CollageRestAPI.Models
         public List<Link> Links { get; set; }
         //[IgnoreDataMember]
         //public List<StudentModel> Students { get; set; } = new List<StudentModel>();
+        public void BeginInit()
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void EndInit()
+        {           
+            var db = BaseRepository.Instance.StudentsCollection.Collection.Database;
+            GradesReferences.ForEach(gradeReference => Grades.Add(db.FetchDBRefAs<GradeModel>(gradeReference)));
+        }
     }
 }

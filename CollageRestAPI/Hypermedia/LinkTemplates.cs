@@ -10,6 +10,8 @@ namespace CollageRestAPI.Hypermedia
     {
         public static class Students
         {
+            public static Link GetStudentsCollectionLink() => new Link("GetStudentsCollection", new UrlHelper().Content("~/api/students"), "GET");
+
             public static Link GetStudentByIdLink(UrlHelper urlHelper, int studentId)
                 => new Link("GetStudentById", urlHelper.Link("GetStudentById", new { id = studentId }), "GET");
             public static Link GetStudentGradesLink(UrlHelper urlHelper, int studentId)
@@ -24,9 +26,7 @@ namespace CollageRestAPI.Hypermedia
                 => new Link("UpdateStudentById", urlHelper.Link("UpdateStudentById", new { id = studentId }), "PUT");
 
             public static Link DeleteStudentByIdLink(UrlHelper urlHelper, int studentId)
-                => new Link("DeleteStudentById", urlHelper.Link("DeleteStudentById", new { id = studentId }), "DELETE");
-
-            public static Link GetStudentsCollectionLink() => new Link("GetStudentsCollection", new UrlHelper().Content("~/api/students"), "GET");
+                => new Link("DeleteStudentById", urlHelper.Link("DeleteStudentById", new { id = studentId }), "DELETE"); 
         }
 
         public static class Courses
