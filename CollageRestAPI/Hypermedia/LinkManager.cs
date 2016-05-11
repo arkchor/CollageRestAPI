@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Http.Routing;
 using System.Linq;
 using System.Web;
+using MongoDB.Bson;
 
 namespace CollageRestAPI.Hypermedia
 {
@@ -38,6 +39,14 @@ namespace CollageRestAPI.Hypermedia
                 LinkTemplates.Courses.GetCourseStudentsLink(urlHelper, name),
                 LinkTemplates.Courses.DeleteCourseByNameLink(urlHelper, name),
                 LinkTemplates.Courses.UpdateCourseByNameLink(urlHelper, name)
+            };
+        }
+
+        public static List<Link> SingleGradeLinks(UrlHelper urlHelper, ObjectId id)
+        {
+            return new List<Link>
+            {
+                
             };
         }
     }

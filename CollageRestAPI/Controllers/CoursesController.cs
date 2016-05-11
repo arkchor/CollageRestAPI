@@ -8,35 +8,47 @@ using CollageRestAPI.Controllers.Interfaces;
 using CollageRestAPI.Hypermedia;
 using CollageRestAPI.Models;
 using CollageRestAPI.Repositories;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using WebGrease.Css.Extensions;
 
 namespace CollageRestAPI.Controllers
 {
-    [RoutePrefix("api/courses")]
+    //[RoutePrefix("api/courses")]
     public class CoursesController : ApiController, ICourseController
     {
-        [HttpGet, Route(Name = "GetCoursesCollection")]
+        /*=======================================
+        =========== GET METHODS =================
+        =======================================*/
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCoursesCollection")]
         public IHttpActionResult GetCoursesCollection()
         {
             return Ok(BaseRepository.Instance.CoursesCollection);
-
         }
 
-        [HttpGet, Route("{courseName}", Name = "GetCourseByName")]
-        public IHttpActionResult GetCourseByName(string courseName)
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourseById")]
+        public IHttpActionResult GetCourseByName(ObjectId id)
         {
-            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
-            course.Links = LinkManager.SingleCourseLinks(Url, course.CourseName);
-
+            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.Id == id);
+            //course.Links = LinkManager.SingleCourseLinks(Url, course.CourseName);
             return Ok(course);
         }
 
-        [HttpGet, Route("{courseName}/students", Name = "GetCourseStudents")]
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourseByName")]
+        public IHttpActionResult GetCourseByName(string courseName)
+        {
+            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+            //course.Links = LinkManager.SingleCourseLinks(Url, course.CourseName);
+            return Ok(course);
+        }
+
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.CourseStudents, Name = "GetCourseStudents")]
         public IHttpActionResult GetCourseStudents(string courseName)
         {
             var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
             var students = new List<StudentModel>();
-            var studentsCollection = BaseRepository.Instance.StudentsCollection;
+            course.StudentsReferences.ForEach(studentReference => students.Add(BaseRepository.Instance.Fetch<StudentModel>(studentReference)));
+            //var studentsCollection = BaseRepository.Instance.StudentsCollection;
 
             //studentsCollection.ForEach(student =>
             //{
@@ -49,14 +61,21 @@ namespace CollageRestAPI.Controllers
             return Ok(students);
         }
 
-        [HttpGet, Route("{courseName}/grades", Name = "GetCourseGrades")]
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "GetCourseGrades")]
         public IHttpActionResult GetCourseGrades(string courseName)
         {
-            throw new NotImplementedException();
+            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+            var grades = new List<GradeModel>();
+            course.GradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));
+
+            return Ok(grades);
         }
 
-        [HttpPost, Route(Name = "CreateCourse")]
-        public IHttpActionResult CreateCourse(CourseModel courseToCreate)
+        /*=======================================
+        =========== POST METHODS ================
+        =======================================*/
+        [HttpPost, Route(WebApiConfig.RoutesTemplates.Courses, Name = "CreateCourse")]
+        public IHttpActionResult CreateCourse([FromBody] CourseModel courseToCreate)
         {
             courseToCreate.Links = LinkManager.SingleCourseLinks(Url, courseToCreate.CourseName);
             BaseRepository.Instance.CoursesCollection.Add(courseToCreate);
@@ -64,28 +83,58 @@ namespace CollageRestAPI.Controllers
             return Created(LinkTemplates.Courses.GetCourseByNameLink(Url, courseToCreate.CourseName).Href, "");
         }
 
-        public IHttpActionResult CreateGradeForStudent(int id, GradeModel gradeToCreate)
+        [HttpPost, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "CreateGradeForStudent")]
+        public IHttpActionResult CreateGradeForStudent(int id, string courseName, [FromBody] GradeModel gradeToCreate)
         {
-            throw new NotImplementedException();
+            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+            gradeToCreate.CourseReference = new MongoDBRef(DatabaseConfig.CoursesCollectionName, course.Id);
+            gradeToCreate.StudentReference = new MongoDBRef(DatabaseConfig.StudentsCollectionName, student.Id);
+            BaseRepository.Instance.GradesCollection.Add(gradeToCreate);
+            gradeToCreate.Links = LinkManager.SingleGradeLinks(Url, gradeToCreate.Id);
+            BaseRepository.Instance.GradesCollection.Update(gradeToCreate);
+            course.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, gradeToCreate.Id));
+            student.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, gradeToCreate.Id));
+
+            return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, courseName, gradeToCreate.Id).Href, "");
         }
 
-        [HttpPut, Route(Name = "UpdateCourseByName")]
+        /*=======================================
+        =========== PUT METHODS =================
+        =======================================*/
+        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateCourseByName")]
         public IHttpActionResult UpdateCourse(string courseName, CourseModel courseToUpdate)
         {
-            throw new NotImplementedException();
-        }
+            courseToUpdate.Links = LinkManager.SingleCourseLinks(Url, courseToUpdate.CourseName);
+            BaseRepository.Instance.CoursesCollection.Update(courseToUpdate);
 
+            return Ok();
+        }
+        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateCourseByName")] //TODO
         public IHttpActionResult UpdateGradeForStudent(int id, GradeModel gradeToUpdate)
         {
             throw new NotImplementedException();
         }
-
-        [HttpDelete, Route(Name = "DeleteCourseByName")]
-        public IHttpActionResult DeleteCourse(string courseName)
+        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateCourseByName")]//TODO
+        public IHttpActionResult RegisterStudentForCourse(int id, string courseName)
+        {
+            throw new NotImplementedException();
+        }
+        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateCourseByName")]//TODO
+        public IHttpActionResult UnregisterStudentFromCourse(int id, string courseName)
         {
             throw new NotImplementedException();
         }
 
+        /*=======================================
+        =========== DELETE METHODS ==============
+        =======================================*/
+        [HttpDelete, Route(WebApiConfig.RoutesTemplates.Courses, Name = "DeleteCourseByName")] //TODO
+        public IHttpActionResult DeleteCourse(string courseName)
+        {
+            throw new NotImplementedException();
+        }
+        [HttpDelete, Route(WebApiConfig.RoutesTemplates.Courses, Name = "DeleteCourseByName")] //TODO
         public IHttpActionResult DeleteGradeForStudent(int id, DateTime dateOfIssue)
         {
             throw new NotImplementedException();

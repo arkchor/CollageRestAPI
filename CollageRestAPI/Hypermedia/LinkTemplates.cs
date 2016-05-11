@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using MongoDB.Bson;
 using UrlHelper = System.Web.Http.Routing.UrlHelper;
 
 namespace CollageRestAPI.Hypermedia
@@ -21,6 +22,14 @@ namespace CollageRestAPI.Hypermedia
                 query.Add("id", studentId.ToString());               
                 var url = urlHelper.Content(WebApiConfig.RoutesTemplates.Students) + "?" + query;
                 return new Link("GetStudentById", url, "GET");
+            }
+            public static Link GetStudentsByNameLink(UrlHelper urlHelper, string firstName, string lastName)
+            {
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                query.Add("firstName", firstName);
+                query.Add("lastName", lastName);
+                var url = urlHelper.Content(WebApiConfig.RoutesTemplates.Students) + "?" + query;
+                return new Link("GetStudentsByName", url, "GET");
             }
             public static Link GetStudentGradesLink(UrlHelper urlHelper, int studentId)
             {
@@ -58,20 +67,59 @@ namespace CollageRestAPI.Hypermedia
 
         public static class Courses
         {
-            public static Link GetCoursesCollectionLink(UrlHelper urlHelper) => new Link("GetCoursesCollection", urlHelper.Content("~/api/courses"), "GET");
+            public static Link GetCoursesCollectionLink(UrlHelper urlHelper) => new Link("GetCoursesCollection", urlHelper.Content(WebApiConfig.RoutesTemplates.Courses), "GET");
 
+            public static Link GetCourseByIdLink(UrlHelper urlHelper, ObjectId id)
+            {
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                query.Add("id", id.ToString());
+                var url = urlHelper.Content(WebApiConfig.RoutesTemplates.Courses) + "?" + query;
+                return new Link("GetCourseById", url, "GET");
+            }
             public static Link GetCourseByNameLink(UrlHelper urlHelper, string name)
-                => new Link("GetCourseByName", urlHelper.Link("GetCourseByName", new { courseName = name }), "GET");
+            {
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                query.Add("courseName", name);
+                var url = urlHelper.Content(WebApiConfig.RoutesTemplates.Courses) + "?" + query;
+                return new Link("GetCourseByName", url, "GET");
+            }
             public static Link GetCourseGradesLink(UrlHelper urlHelper, string name)
-                => new Link("GetCourseGrades", urlHelper.Link("GetCourseGrades", new { courseName = name }), "GET");
+            {
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                query.Add("courseName", name);
+                var url = urlHelper.Content(WebApiConfig.RoutesTemplates.CourseGrades) + "?" + query;
+                return new Link("GetCourseGrades", url, "GET");
+            }
             public static Link GetCourseStudentsLink(UrlHelper urlHelper, string name)
-                => new Link("GetCourseStudents", urlHelper.Link("GetCourseStudents", new { courseName = name }), "GET");
-            public static Link CreateCourseLink(UrlHelper urlHelper, string name)
-                => new Link("CreateCourse", urlHelper.Link("CreateCourse", new { courseName = name }), "POST");
+            {
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                query.Add("courseName", name);
+                var url = urlHelper.Content(WebApiConfig.RoutesTemplates.CourseStudents) + "?" + query;
+                return new Link("GetCourseStudents", url, "GET");
+            }
+            public static Link GetCourseGradeByIdLink(UrlHelper urlHelper, string name, ObjectId gradeId)
+            {
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                query.Add("courseName", name);
+                query.Add("gradeId", gradeId.ToString());
+                var url = urlHelper.Content(WebApiConfig.RoutesTemplates.CourseGrades) + "?" + query;
+                return new Link("GetCourseGradeById", url, "GET");
+            }
+            public static Link CreateCourseLink(UrlHelper urlHelper, string name) => new Link("CreateCourse", urlHelper.Content(WebApiConfig.RoutesTemplates.Courses), "POST");
             public static Link UpdateCourseByNameLink(UrlHelper urlHelper, string name)
-                => new Link("UpdateCourseByName", urlHelper.Link("UpdateCourseByName", new { courseName = name }), "PUT");           
+            {
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                query.Add("courseName", name);
+                var url = urlHelper.Content(WebApiConfig.RoutesTemplates.Courses) + "?" + query;
+                return new Link("UpdateCourseByName", url, "PUT");
+            }     
             public static Link DeleteCourseByNameLink(UrlHelper urlHelper, string name)
-                => new Link("DeleteCourseByName", urlHelper.Link("DeleteCourseByName", new { courseName = name }), "DELETE");
+            {
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                query.Add("courseName", name);
+                var url = urlHelper.Content(WebApiConfig.RoutesTemplates.Courses) + "?" + query;
+                return new Link("DeleteCourseByName", url, "DELETE");
+            }
         }
 
         public static class Grades

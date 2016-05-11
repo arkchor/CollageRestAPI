@@ -9,6 +9,9 @@ namespace CollageRestAPI.Controllers.Interfaces
         //=== GET METHODS ===//
         IHttpActionResult GetStudentsCollection();
         IHttpActionResult GetStudentById(int id);
+        IHttpActionResult GetStudentsByFullName(string firstName, string lastName);
+        IHttpActionResult GetStudentsByFirstName(string firstName);
+        IHttpActionResult GetStudentsByLastName(string lastName);
         IHttpActionResult GetStudentGrades(int id);
         IHttpActionResult GetStudentGradesByCourse(int id, string courseName);
         //IHttpActionResult GetStudentGradeByIssueDate(int id, DateTime issueDate);

@@ -30,6 +30,23 @@ namespace CollageRestAPI.Controllers
 
             return Ok(student);
         }
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentsByName")]
+        public IHttpActionResult GetStudentsByName(string firstName = null, string lastName = null)
+        {
+            if (firstName == null && lastName == null)
+            {
+                return Ok(new List<StudentModel>());
+            }
+            if (firstName == null)
+            {
+                return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.LastName == lastName).ToList());
+            }
+            if (lastName == null)
+            {
+                return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName).ToList());
+            }
+            return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName && student.LastName == lastName).ToList());
+        }
 
         [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGrades")]
         public IHttpActionResult GetStudentGrades(int id)
@@ -40,6 +57,7 @@ namespace CollageRestAPI.Controllers
 
             return Ok(grades);
         }
+
         [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGradesByCourse")]
         public IHttpActionResult GetStudentGradesByCourse(int id, string courseName)
         {
@@ -50,6 +68,40 @@ namespace CollageRestAPI.Controllers
             //var gradess = student.Grades.Where(grade => course.Grades.Contains(grade)).ToList();
             var grades = new List<GradeModel>();
             gradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));
+
+            return Ok(grades);
+        }
+
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGradesWithValueFilter")]
+        public IHttpActionResult GetStudentGradesWithValueFilter(int id, double value, int condition)
+        {
+            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+            var grades = new List<GradeModel>();
+            student.GradesReferences.ForEach(gradeReference =>
+            {
+                var grade = BaseRepository.Instance.Fetch<GradeModel>(gradeReference);
+                switch (condition)
+                {
+                    case 1:
+                        if (grade.Value > value)
+                        {
+                            grades.Add(grade);
+                        }
+                        break;
+                    case 0:
+                        if (grade.Value == value)
+                        {
+                            grades.Add(grade);
+                        }
+                        break;
+                    case -1:
+                        if (grade.Value < value)
+                        {
+                            grades.Add(grade);
+                        }
+                        break;
+                }
+            });
 
             return Ok(grades);
         }
