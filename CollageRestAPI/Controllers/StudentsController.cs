@@ -10,19 +10,20 @@ using CollageRestAPI.Repositories;
 
 namespace CollageRestAPI.Controllers
 {
-    [RoutePrefix("api/students")]
+    //[RoutePrefix("api/students")]
     public class StudentsController : ApiController, IStudentsController
     {
         /*=======================================
         =========== GET METHODS =================
         =======================================*/
-        [HttpGet, Route(Name = "GetStudentsCollection")]
+        //[HttpGet, Route(Name = "GetStudentsCollection")]
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentsCollection")]
         public IHttpActionResult GetStudentsCollection()
         {
             return Ok(BaseRepository.Instance.StudentsCollection);
         }
 
-        [HttpGet, Route("{id}", Name = "GetStudentById")]
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentById")]
         public IHttpActionResult GetStudentById(int id)
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
@@ -36,7 +37,8 @@ namespace CollageRestAPI.Controllers
 
             return Ok(student);
         }
-        [HttpGet, Route("{id}/grades", Name = "GetStudentGrades")]
+
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGrades")]
         public IHttpActionResult GetStudentGrades(int id)
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);

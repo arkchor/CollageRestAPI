@@ -8,13 +8,12 @@ namespace CollageRestAPI.Hypermedia
 {
     public static class LinkManager
     {
-        public static List<Link> InitialLinks()
+        public static List<Link> InitialLinks(UrlHelper urlHelper)
         {
             return new List<Link>
             {
-                LinkTemplates.Students.GetStudentsCollectionLink(),
-                LinkTemplates.Courses.GetCoursesCollectionLink(),
-                LinkTemplates.Grades.GetGradesCollectionLink()
+                LinkTemplates.Students.GetStudentsCollectionLink(urlHelper),
+                LinkTemplates.Courses.GetCoursesCollectionLink(urlHelper)
             };
         }
 

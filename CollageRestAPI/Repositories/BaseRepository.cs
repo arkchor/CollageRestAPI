@@ -11,12 +11,16 @@ namespace CollageRestAPI.Repositories
     {
         //public MongoClient DbClient { get; set; }
         //public IMongoDatabase Db { get; set; }
-        private readonly MongoDatabase _db = Instance.StudentsCollection.Collection.Database;
+        private readonly MongoDatabase _db;
 
-        private static readonly Lazy<BaseRepository> lazy =
+        private static readonly Lazy<BaseRepository> Lazy =
         new Lazy<BaseRepository>(() => new BaseRepository());
-        public static BaseRepository Instance { get { return lazy.Value; } }
-        private BaseRepository(){}
+        public static BaseRepository Instance => Lazy.Value;
+
+        private BaseRepository()
+        {
+            _db = StudentsCollection.Collection.Database;
+        }
 
         public T Fetch<T>(MongoDBRef reference)
         {

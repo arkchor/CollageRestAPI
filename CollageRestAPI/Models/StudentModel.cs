@@ -14,7 +14,7 @@ namespace CollageRestAPI.Models
 {
     //[DataContract(IsReference = true)]
     [CollectionName(DatabaseConfig.StudentsCollectionName)]
-    public class StudentModel : IEntity<int>, ISupportInitialize
+    public class StudentModel : IEntity<int>
     {
         //if (Enumerable.Range(1, 999999).Contains(value))
         [BsonId]
@@ -22,14 +22,19 @@ namespace CollageRestAPI.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime BornDate { get; set; }
+        [IgnoreDataMember]
+        public List<MongoDBRef> GradesReferences { get; set; } = new List<MongoDBRef>();
+        [IgnoreDataMember]
+        public List<MongoDBRef> CoursesReferences { get; set; } = new List<MongoDBRef>();
+        [BsonIgnore]
+        public List<Link> Links { get; set; } = new List<Link>();
 
         [IgnoreDataMember]
         [BsonIgnore]
         public List<GradeModel> Grades { get; set; } = new List<GradeModel>();
-        [IgnoreDataMember]
-        public List<MongoDBRef> GradesReferences { get; set; } = new List<MongoDBRef>();
+
         public void AddGrades(List<GradeModel> grades)
-        {          
+        {
             Grades.AddRange(grades);
             grades.ForEach(grade => GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, grade.Id)));
         }
@@ -37,8 +42,7 @@ namespace CollageRestAPI.Models
         [IgnoreDataMember]
         [BsonIgnore]
         public List<CourseModel> Courses { get; set; } = new List<CourseModel>();
-        [IgnoreDataMember]
-        public List<MongoDBRef> CoursesReferences { get; set; } = new List<MongoDBRef>();
+
         public void AddCourses(List<CourseModel> courses)
         {
             BaseRepository.Instance.CoursesCollection.Add(courses);
@@ -46,18 +50,15 @@ namespace CollageRestAPI.Models
             courses.ForEach(course => CoursesReferences.Add(new MongoDBRef(DatabaseConfig.CoursesCollectionName, course.Id)));
         }
 
-        public List<Link> Links { get; set; } = new List<Link>();
+        //public void BeginInit()
+        //{
+        //    //throw new NotImplementedException();
+        //}
 
-
-        public void BeginInit()
-        {
-            //throw new NotImplementedException();
-        }
-
-        public void EndInit()
-        {
-            var db = BaseRepository.Instance.StudentsCollection.Collection.Database;
-            GradesReferences.ForEach(gradeReference => Grades.Add(db.FetchDBRefAs<GradeModel>(gradeReference)));
-        }
+        //public void EndInit()
+        //{
+        //    var db = BaseRepository.Instance.StudentsCollection.Collection.Database;
+        //    GradesReferences.ForEach(gradeReference => Grades.Add(db.FetchDBRefAs<GradeModel>(gradeReference)));
+        //}
     }
 }

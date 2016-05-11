@@ -20,12 +20,14 @@ namespace CollageRestAPI.Models
         [BsonId]
         public ObjectId Id { get; set; }
         public double Value { get; set; }
-        public DateTime IssueDateTime { get; set; }
-        public List<Link> Links { get; set; }
+        public DateTime IssueDateTime { get; set; }       
         [IgnoreDataMember]
         public MongoDBRef StudentReference { get; set; }
         [IgnoreDataMember]
         public MongoDBRef CourseReference { get; set; }
+        //[BsonIgnore]
+        public List<Link> Links { get; set; }
+
         //[IgnoreDataMember]
         //[BsonIgnore]
         //public StudentModel Student { get; set; }
@@ -38,7 +40,7 @@ namespace CollageRestAPI.Models
         //public CourseModel Course { get; set; } = new CourseModel();
         //public void BeginInit()
         //{
-            
+
         //}
 
         //public void EndInit()

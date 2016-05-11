@@ -27,18 +27,28 @@ namespace CollageRestAPI
             );
         }
 
-        public static class RoutingTemplates
+        public static class RoutesTemplates
         {
             //Root
-            public static string ApiRoot => "~/api";
+            public const string ApiRoot = "~/api";
             //Students
-            public static string StudentsAll => "~/api/students/all";
-            public static string StudentById => "~/api/students/{id}";
-            public static string StudentGradesAll => "~/api/students/{id}/grades/all";
-            public static string StudentGradesByCourse => "~/api/students/{id}/grades/{courseName}";
-            public static string StudentGradeByIssueDate => "~/api/students/{id}/grades";
+            public const string Students = ApiRoot + "/students";
+            public const string StudentGrades = Students + "/grades";
+            public const string StudentCourses = Students + "/courses";
+            public const string StudentById = Students + "/{id}";
+            //public static string StudentGradesAll => "~/api/students/{id}/grades/all";
+            //public static string StudentGradesByCourse => "~/api/students/{id}/grades/{courseName}";
+            //public static string StudentGradeByIssueDate => "~/api/students/{id}/grades";
             //Courses
-            public static string Courses => "~/api/courses";
+            public static string Courses => ApiRoot + "/courses";
+            public static string CourseStudents => Courses + "/students";
+            public static string CourseGrades => Courses + "/grades";
+        }
+
+        public static class RoutesNames
+        {
+            //Students
+            public const string GetStudentsCollection = "GetStudentsCollection";
         }
     }
 }

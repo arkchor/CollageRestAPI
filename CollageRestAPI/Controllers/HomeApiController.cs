@@ -8,14 +8,14 @@ using CollageRestAPI.Hypermedia;
 
 namespace CollageRestAPI.Controllers
 {
-    [RoutePrefix("api/start")]
+    //[RoutePrefix("api/start")]
     public class HomeApiController : ApiController
     {
         [HttpGet]
-        [Route("")]
+        [Route("api/start")]
         public IHttpActionResult GetHomeApi()
         {        
-            return Ok(LinkManager.InitialLinks());
+            return Ok(LinkManager.InitialLinks(Url));
         }
     }
 }
