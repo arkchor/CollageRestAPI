@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using CollageRestAPI.Controllers.Interfaces;
 using CollageRestAPI.Hypermedia;
 using CollageRestAPI.Models;
 using CollageRestAPI.Repositories;
-using Microsoft.Ajax.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using WebGrease.Css.Extensions;
 
 namespace CollageRestAPI.Controllers
 {
@@ -60,9 +56,17 @@ namespace CollageRestAPI.Controllers
         //}
 
         [HttpGet, Route(WebApiConfig.RoutesTemplates.CourseStudents, Name = "GetCourseStudents")]
-        public IHttpActionResult GetCourseStudents(string courseName)
+        public IHttpActionResult GetCourseStudents(string courseName, int id = 0)
         {
             var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+            if (id != 0)
+            {
+                var studentReference =
+                    course.StudentsReferences.Single(
+                        reference =>
+                            reference == new MongoDBRef(DatabaseConfig.StudentsCollectionName, id));
+                return Ok(BaseRepository.Instance.Fetch<StudentModel>(studentReference));
+            }
             var students = new List<StudentModel>();
             course.StudentsReferences.ForEach(studentReference => students.Add(BaseRepository.Instance.Fetch<StudentModel>(studentReference)));
             //var studentsCollection = BaseRepository.Instance.StudentsCollection;
@@ -137,12 +141,12 @@ namespace CollageRestAPI.Controllers
 
             return Ok();
         }
-        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateGradeForStudent")] //TODO
+        [HttpPut, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "UpdateGradeForStudent")] //TODO
         public IHttpActionResult UpdateGradeForStudent(int id, GradeModel gradeToUpdate)
         {
             throw new NotImplementedException();
         }
-        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "RegisterStudentForCourse")]//TODO
+        [HttpPut, Route(WebApiConfig.RoutesTemplates.CourseStudents, Name = "RegisterStudentForCourse")]//TODO
         public IHttpActionResult RegisterStudentForCourse(int id, string courseName, bool unregister = false)
         {
             var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
@@ -177,7 +181,7 @@ namespace CollageRestAPI.Controllers
         {
             throw new NotImplementedException();
         }
-        [HttpDelete, Route(WebApiConfig.RoutesTemplates.Courses, Name = "DeleteGradeForStudent")] //TODO
+        [HttpDelete, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "DeleteGradeForStudent")] //TODO
         public IHttpActionResult DeleteGradeForStudent(int id, DateTime dateOfIssue)
         {
             throw new NotImplementedException();

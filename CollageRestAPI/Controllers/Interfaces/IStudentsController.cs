@@ -7,9 +7,9 @@ namespace CollageRestAPI.Controllers.Interfaces
     interface IStudentsController
     {
         //=== GET METHODS ===//
-        IHttpActionResult GetStudentsCollection(string firstName = null, string lastName = null);
-        IHttpActionResult GetStudentsCollection(DateTime bornDate, int condition = 0);
-        IHttpActionResult GetStudentById(int id);
+        IHttpActionResult GetStudents(int id = 0, string firstName = null, string lastName = null);
+        IHttpActionResult GetStudents(DateTime bornDate, int condition = 0);
+        //IHttpActionResult GetStudentById(int id);
         //IHttpActionResult GetStudentsByName(string firstName, string lastName);
         //IHttpActionResult GetStudentsByFirstName(string firstName);
         //IHttpActionResult GetStudentsByLastName(string lastName);

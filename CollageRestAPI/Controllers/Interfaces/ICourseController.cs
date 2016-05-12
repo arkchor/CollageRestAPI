@@ -11,7 +11,7 @@ namespace CollageRestAPI.Controllers.Interfaces
         IHttpActionResult GetCourses(string id = null, string courseName = null, string tutor = null);
         //IHttpActionResult GetCourseByName(string courseName);
         //IHttpActionResult GetCourseById(ObjectId id);
-        IHttpActionResult GetCourseStudents(string courseName);
+        IHttpActionResult GetCourseStudents(string courseName, int id = 0);
         IHttpActionResult GetCourseGrades(string courseName, string id = null);
 
         //=== POST METHODS ===//
