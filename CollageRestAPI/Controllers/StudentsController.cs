@@ -7,6 +7,7 @@ using CollageRestAPI.Hypermedia;
 using CollageRestAPI.Models;
 using CollageRestAPI.Providers;
 using CollageRestAPI.Repositories;
+using CollageRestAPI.Utils;
 
 namespace CollageRestAPI.Controllers
 {
@@ -18,24 +19,11 @@ namespace CollageRestAPI.Controllers
         =======================================*/
         //[HttpGet, Route(Name = "GetStudentsCollection")]
         [HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentsCollection")]
-        public IHttpActionResult GetStudentsCollection()
-        {
-            return Ok(BaseRepository.Instance.StudentsCollection);
-        }
-
-        [HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentById")]
-        public IHttpActionResult GetStudentById(int id)
-        {
-            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
-
-            return Ok(student);
-        }
-        [HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentsByName")]
-        public IHttpActionResult GetStudentsByName(string firstName = null, string lastName = null)
+        public IHttpActionResult GetStudentsCollection(string firstName = null, string lastName = null)
         {
             if (firstName == null && lastName == null)
             {
-                return Ok(new List<StudentModel>());
+                return Ok(BaseRepository.Instance.StudentsCollection);
             }
             if (firstName == null)
             {
@@ -45,8 +33,52 @@ namespace CollageRestAPI.Controllers
             {
                 return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName).ToList());
             }
-            return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName && student.LastName == lastName).ToList());
+            return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName && student.LastName == lastName).ToList());            
         }
+
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.Students)]
+        public IHttpActionResult GetStudentsCollection(DateTime bornDate, int condition = 0)
+        {
+            var students = BaseRepository.Instance.StudentsCollection.ToList();
+            return Ok(students.Where(student => student.BornDate.Date.CompareTo(bornDate.Date) == condition));
+            //switch (condition)
+            //{
+            //    case ComparingUtils.GreaterThan:
+            //        return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.BornDate.CompareTo(bornDate) == condition))
+            //        break;
+            //    case ComparingUtils.EqualTo:
+
+            //        break;
+            //    case ComparingUtils.LessThan:
+
+            //        break;
+            //}
+        }
+
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentById")]
+        public IHttpActionResult GetStudentById(int id)
+        {
+            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+
+            return Ok(student);
+        }
+        //[HttpGet, Route(WebApiConfig.RoutesTemplates.Students+"/filter", Name = "GetStudentsByName")]
+        //public IHttpActionResult GetStudentsByName(string firstName = null, string lastName = null)
+        //{
+        //    if (firstName == null && lastName == null)
+        //    {
+        //        return Ok(new List<StudentModel>());
+        //    }
+        //    if (firstName == null)
+        //    {
+        //        return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.LastName == lastName).ToList());
+        //    }
+        //    if (lastName == null)
+        //    {
+        //        return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName).ToList());
+        //    }
+        //    return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName && student.LastName == lastName).ToList());
+        //}
 
         [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGrades")]
         public IHttpActionResult GetStudentGrades(int id)
@@ -73,34 +105,38 @@ namespace CollageRestAPI.Controllers
         }
 
         [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGradesWithValueFilter")]
-        public IHttpActionResult GetStudentGradesWithValueFilter(int id, double value, int condition)
+        public IHttpActionResult GetStudentGradesWithValueFilter(int id, double value, int condition = 0)
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
             var grades = new List<GradeModel>();
             student.GradesReferences.ForEach(gradeReference =>
             {
                 var grade = BaseRepository.Instance.Fetch<GradeModel>(gradeReference);
-                switch (condition)
+                if (grade.Value.CompareTo(value) == condition)
                 {
-                    case 1:
-                        if (grade.Value > value)
-                        {
-                            grades.Add(grade);
-                        }
-                        break;
-                    case 0:
-                        if (grade.Value == value)
-                        {
-                            grades.Add(grade);
-                        }
-                        break;
-                    case -1:
-                        if (grade.Value < value)
-                        {
-                            grades.Add(grade);
-                        }
-                        break;
+                    grades.Add(grade);
                 }
+                //switch (condition)
+                //{
+                //    case ComparingUtils.GreaterThan:
+                //        if (grade.Value > value)
+                //        {
+                //            grades.Add(grade);
+                //        }
+                //        break;
+                //    case ComparingUtils.EqualTo:
+                //        if (grade.Value == value)
+                //        {
+                //            grades.Add(grade);
+                //        }
+                //        break;
+                //    case ComparingUtils.LessThan:
+                //        if (grade.Value < value)
+                //        {
+                //            grades.Add(grade);
+                //        }
+                //        break;
+                //}
             });
 
             return Ok(grades);

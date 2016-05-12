@@ -8,6 +8,7 @@ using CollageRestAPI.Controllers.Interfaces;
 using CollageRestAPI.Hypermedia;
 using CollageRestAPI.Models;
 using CollageRestAPI.Repositories;
+using Microsoft.Ajax.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using WebGrease.Css.Extensions;
@@ -20,27 +21,43 @@ namespace CollageRestAPI.Controllers
         /*=======================================
         =========== GET METHODS =================
         =======================================*/
-        [HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCoursesCollection")]
-        public IHttpActionResult GetCoursesCollection()
+        [HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourses")]
+        public IHttpActionResult GetCourses(string id = null, string courseName = null, string tutor = null)
         {
-            return Ok(BaseRepository.Instance.CoursesCollection);
+            if (id != null)
+            {
+                return Ok(BaseRepository.Instance.CoursesCollection.Single(x => x.Id == new ObjectId(id)));
+            }
+            if (courseName == null && tutor == null)
+            {
+                return Ok(BaseRepository.Instance.CoursesCollection);
+            }
+            if (tutor == null)
+            {
+                return Ok(BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName));
+            }
+            if (courseName == null)
+            {
+                return Ok(BaseRepository.Instance.CoursesCollection.Where(course => course.Tutor == tutor).ToList());
+            }
+            return Ok(BaseRepository.Instance.CoursesCollection.Where(course => course.CourseName == courseName && course.Tutor == tutor).ToList());
         }
 
-        [HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourseById")]
-        public IHttpActionResult GetCourseByName(ObjectId id)
-        {
-            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.Id == id);
-            //course.Links = LinkManager.SingleCourseLinks(Url, course.CourseName);
-            return Ok(course);
-        }
+        //[HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourseById")]
+        //public IHttpActionResult GetCourseById([FromUri] ObjectId id)
+        //{
+        //    var course = BaseRepository.Instance.CoursesCollection.Single(x => x.Id == id);
+        //    //course.Links = LinkManager.SingleCourseLinks(Url, course.CourseName);
+        //    return Ok(course);
+        //}
 
-        [HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourseByName")]
-        public IHttpActionResult GetCourseByName(string courseName)
-        {
-            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
-            //course.Links = LinkManager.SingleCourseLinks(Url, course.CourseName);
-            return Ok(course);
-        }
+        //[HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourseByName")]
+        //public IHttpActionResult GetCourseByName(string courseName)
+        //{
+        //    var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+        //    //course.Links = LinkManager.SingleCourseLinks(Url, course.CourseName);
+        //    return Ok(course);
+        //}
 
         [HttpGet, Route(WebApiConfig.RoutesTemplates.CourseStudents, Name = "GetCourseStudents")]
         public IHttpActionResult GetCourseStudents(string courseName)
@@ -62,9 +79,17 @@ namespace CollageRestAPI.Controllers
         }
 
         [HttpGet, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "GetCourseGrades")]
-        public IHttpActionResult GetCourseGrades(string courseName)
+        public IHttpActionResult GetCourseGrades(string courseName, string id = null)
         {
             var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+            if (id != null)
+            {
+                var gradeReference =
+                    course.GradesReferences.Single(
+                        reference =>
+                            reference == new MongoDBRef(DatabaseConfig.GradesCollectionName, new ObjectId(id)));
+                return Ok(BaseRepository.Instance.Fetch<GradeModel>(gradeReference));
+            }          
             var grades = new List<GradeModel>();
             course.GradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));
 
@@ -95,6 +120,8 @@ namespace CollageRestAPI.Controllers
             BaseRepository.Instance.GradesCollection.Update(gradeToCreate);
             course.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, gradeToCreate.Id));
             student.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, gradeToCreate.Id));
+            BaseRepository.Instance.StudentsCollection.Update(student);
+            BaseRepository.Instance.CoursesCollection.Update(course);
 
             return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, courseName, gradeToCreate.Id).Href, "");
         }
@@ -110,21 +137,37 @@ namespace CollageRestAPI.Controllers
 
             return Ok();
         }
-        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateCourseByName")] //TODO
+        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateGradeForStudent")] //TODO
         public IHttpActionResult UpdateGradeForStudent(int id, GradeModel gradeToUpdate)
         {
             throw new NotImplementedException();
         }
-        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateCourseByName")]//TODO
-        public IHttpActionResult RegisterStudentForCourse(int id, string courseName)
+        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "RegisterStudentForCourse")]//TODO
+        public IHttpActionResult RegisterStudentForCourse(int id, string courseName, bool unregister = false)
         {
-            throw new NotImplementedException();
+            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+
+            if (unregister)
+            {              
+                course.StudentsReferences.Remove(new MongoDBRef(DatabaseConfig.StudentsCollectionName, student.Id));
+                student.CoursesReferences.Remove(new MongoDBRef(DatabaseConfig.CoursesCollectionName, course.Id));
+            }
+            else
+            {
+                course.StudentsReferences.Add(new MongoDBRef(DatabaseConfig.StudentsCollectionName, student.Id));
+                student.CoursesReferences.Add(new MongoDBRef(DatabaseConfig.CoursesCollectionName, course.Id));
+            }
+            BaseRepository.Instance.CoursesCollection.Update(course);
+            BaseRepository.Instance.StudentsCollection.Update(student);
+
+            return Ok();
         }
-        [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateCourseByName")]//TODO
-        public IHttpActionResult UnregisterStudentFromCourse(int id, string courseName)
-        {
-            throw new NotImplementedException();
-        }
+        //[HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UnregisterStudentFromCourse")]//TODO
+        //public IHttpActionResult UnregisterStudentFromCourse(int id, string courseName)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         /*=======================================
         =========== DELETE METHODS ==============
@@ -134,7 +177,7 @@ namespace CollageRestAPI.Controllers
         {
             throw new NotImplementedException();
         }
-        [HttpDelete, Route(WebApiConfig.RoutesTemplates.Courses, Name = "DeleteCourseByName")] //TODO
+        [HttpDelete, Route(WebApiConfig.RoutesTemplates.Courses, Name = "DeleteGradeForStudent")] //TODO
         public IHttpActionResult DeleteGradeForStudent(int id, DateTime dateOfIssue)
         {
             throw new NotImplementedException();

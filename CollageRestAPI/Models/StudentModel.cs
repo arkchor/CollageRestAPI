@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 using System.Web;
 using CollageRestAPI.Hypermedia;
 using CollageRestAPI.Repositories;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoRepository;
 
@@ -21,6 +22,7 @@ namespace CollageRestAPI.Models
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        //[BsonDateTimeOptions(DateOnly = true, Kind = DateTimeKind.Utc, Representation = BsonType.DateTime)]
         public DateTime BornDate { get; set; }
         [IgnoreDataMember]
         public List<MongoDBRef> GradesReferences { get; set; } = new List<MongoDBRef>();

@@ -26,7 +26,7 @@ namespace CollageRestAPI.Models
         [IgnoreDataMember]
         public List<MongoDBRef> StudentsReferences { get; set; } = new List<MongoDBRef>();
         //[BsonIgnore]
-        public List<Link> Links { get; set; }
+        public List<Link> Links { get; set; } = new List<Link>();
 
 
         //[BsonIgnore]
