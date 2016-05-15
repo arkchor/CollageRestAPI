@@ -8,7 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -16,11 +16,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Collage system", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                    @*<li>@Html.ActionLink("Courses", "Index", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Students", "Index", "Home", new { area = "" }, null)</li>*@
+                    <li><a href="#courses">Courses</a></li>
+                    <li><a href="#students">Students</a></li>
                     <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
                 </ul>
             </div>
@@ -28,11 +31,23 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
+
+    <footer class="clearfix" role="contentinfo">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <p>&copy; @DateTime.Now.Year - Arkadiusz Chorian</p>
+                </div>
+                <div class="col-md-offset-6 col-md-3">
+                    <h3>Related sites</h3>
+                    <ul>
+                        <li><a href="http://fc.put.poznan.pl">Wydział informatyki PUT</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

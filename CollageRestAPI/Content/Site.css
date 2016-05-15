@@ -1,6 +1,14 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿html {
+    height: 100%;
+}
+body {
+    position: relative;
+    /*padding-top: 100px;*/
+    padding-bottom: 100px;
+    /*background: #5a5a5a;*/
+    background: #2E333E;
+    color: #D7D7D7;
+    min-height: 100%;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -14,4 +22,126 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+p {
+    background-color: #5a5a5a;
+    margin: 0;
+}
+
+.table .table-row {
+    color: black;
+}
+
+.table-section h1 {
+    margin-bottom: 20px;
+}
+
+section#courses {
+    display: none;
+}
+
+section#courses:target {
+    display: block;
+}
+
+section#students {
+    display: none;
+}
+
+section#students:target {
+    display: block;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: #D7D7D7;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover {
+    color: #222222;
+    background-color: #D7D7D7;
+}
+
+.navbar-inverse .navbar-header > a {
+    color: #D7D7D7;
+}
+
+/*.navbar-inverse .navbar-header > a:hover {
+    color: #222222;
+    background-color: white;
+}*/
+
+footer {
+    background-color: #222222;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+footer p {
+    background-color: #222222;
+    margin-top: 55px;
+}
+
+footer ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.navbar {
+    border: none;
+}
+
+.wrapper {
+  margin: 0 auto;
+  padding: 40px;
+  max-width: 800px;
+}
+
+.table {
+  margin: 0 0 40px 0;
+  width: 100%;
+  display: table;
+}
+@media screen and (max-width: 580px) {
+  .table {
+    display: block;
+  }
+}
+
+.table-row {
+  display: table-row;
+  background: #f6f6f6;
+}
+.table-row:nth-of-type(odd) {
+  background: #DDDDDD;
+}
+.table-row.header {
+  font-weight: 900;
+  color: #ffffff;
+  background: #4478d6;
+}
+.table-row.green {
+  background: #27ae60;
+}
+.table-row.blue {
+  background: #2980b9;
+}
+@media screen and (max-width: 580px) {
+  .table-row {
+    padding: 8px 0;
+    display: block;
+  }
+}
+
+.cell {
+  padding: 6px 12px;
+  display: table-cell;
+}
+@media screen and (max-width: 580px) {
+  .cell {
+    padding: 2px 12px;
+    display: block;
+  }
 }
