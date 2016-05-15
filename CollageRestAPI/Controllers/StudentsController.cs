@@ -7,7 +7,6 @@ using CollageRestAPI.Hypermedia;
 using CollageRestAPI.Models;
 using CollageRestAPI.Providers;
 using CollageRestAPI.Repositories;
-using CollageRestAPI.Utils;
 
 namespace CollageRestAPI.Controllers
 {
@@ -17,10 +16,13 @@ namespace CollageRestAPI.Controllers
         /*=======================================
         =========== GET METHODS =================
         =======================================*/
-        //[HttpGet, Route(Name = "GetStudentsCollection")]
         [HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentsCollection")]
-        public IHttpActionResult GetStudentsCollection(string firstName = null, string lastName = null)
+        public IHttpActionResult GetStudents(int id = 0, string firstName = null, string lastName = null)
         {
+            if (id != 0)
+            {
+                return Ok(BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id));
+            }
             if (firstName == null && lastName == null)
             {
                 return Ok(BaseRepository.Instance.StudentsCollection);
@@ -37,7 +39,7 @@ namespace CollageRestAPI.Controllers
         }
 
         [HttpGet, Route(WebApiConfig.RoutesTemplates.Students)]
-        public IHttpActionResult GetStudentsCollection(DateTime bornDate, int condition = 0)
+        public IHttpActionResult GetStudents(DateTime bornDate, int condition = 0)
         {
             var students = BaseRepository.Instance.StudentsCollection.ToList();
             return Ok(students.Where(student => student.BornDate.Date.CompareTo(bornDate.Date) == condition));
@@ -55,13 +57,13 @@ namespace CollageRestAPI.Controllers
             //}
         }
 
-        [HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentById")]
-        public IHttpActionResult GetStudentById(int id)
-        {
-            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+        //[HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentById")]
+        //public IHttpActionResult GetStudentById(int id)
+        //{
+        //    var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
 
-            return Ok(student);
-        }
+        //    return Ok(student);
+        //}
         //[HttpGet, Route(WebApiConfig.RoutesTemplates.Students+"/filter", Name = "GetStudentsByName")]
         //public IHttpActionResult GetStudentsByName(string firstName = null, string lastName = null)
         //{
