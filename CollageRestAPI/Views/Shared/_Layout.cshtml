@@ -7,50 +7,76 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
-<body>
-    <div class="navbar navbar-inverse">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Collage system", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Courses", "Index", "Home", new { area = "" }, null)</li>
+<body class="layout">
+    <header class="layout-header">
+        <div class="Header Header--cozy" role="banner">
+            HEAD
+        </div>
+    </header>
+    <main class="layout-body">
+        <article class="layout-content">
+            <h1>{{ page.title }}</h1>
+            {{ page.content }}
+        </article>
+        <nav class="layout-nav u-textCenter">
+            <strong>Navigation</strong>
+            <ul class="nav navbar-nav">
+                @*<li>@Html.ActionLink("Courses", "Index", "Home", new { area = "" }, null)</li>
+            <li>@Html.ActionLink("Students", "Index", "Home", new { area = "" }, null)</li>*@
+                <li><a href="#courses">Courses</a></li>
+                <li><a href="#students">Students</a></li>
+                <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
+            </ul>
+        </nav>
+    </main>
+    <footer class="layout-footer">
+        <div class="Footer">
+            {% include 'footer.html' %}
+        </div>
+    </footer>
+<!--<div class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Collage system", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                @*<li>@Html.ActionLink("Courses", "Index", "Home", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("Students", "Index", "Home", new { area = "" }, null)</li>*@
-                    <li><a href="#courses">Courses</a></li>
-                    <li><a href="#students">Students</a></li>
-                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
+                <li><a href="#courses">Courses</a></li>
+                <li><a href="#students">Students</a></li>
+                <li>@Html.ActionLink("API", "Index", "Help", new {area = ""}, null)</li>
+            </ul>
+        </div>
+    </div>
+</div>-->
+<div class="container body-content">
+    @RenderBody()
+</div>
+
+<footer class="clearfix" role="contentinfo">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <p>&copy; @DateTime.Now.Year - Arkadiusz Chorian</p>
+            </div>
+            <div class="col-md-offset-6 col-md-3">
+                <h3>Related sites</h3>
+                <ul>
+                    <li><a href="http://fc.put.poznan.pl">Wydział informatyki PUT</a></li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-    </div>
+</footer>
 
-    <footer class="clearfix" role="contentinfo">
-        <div class="container">
-            <div class="row text-center">
-                <div class="col-md-3">
-                    <p>&copy; @DateTime.Now.Year - Arkadiusz Chorian</p>
-                </div>
-                <div class="col-md-offset-6 col-md-3">
-                    <h3>Related sites</h3>
-                    <ul>
-                        <li><a href="http://fc.put.poznan.pl">Wydział informatyki PUT</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
 </body>
 </html>
