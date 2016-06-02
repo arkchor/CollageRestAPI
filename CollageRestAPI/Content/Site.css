@@ -154,9 +154,9 @@ p {
     margin: 0;
 }
 
-.table .table-row {
+/*.table .table-row {
     color: black;
-}
+}*/
 
 .table-section h2 {
     /*margin-bottom: 20px;*/
@@ -200,7 +200,7 @@ section#students:target {
     display: block;
 }*/
 
-.navbar-inverse .navbar-nav > li > a {
+/*.navbar-inverse .navbar-nav > li > a {
     color: #D7D7D7;
 }
 
@@ -211,7 +211,7 @@ section#students:target {
 
 .navbar-inverse .navbar-header > a {
     color: #D7D7D7;
-}
+}*/
 
 /*nav {
   list-style: none;
@@ -265,62 +265,71 @@ footer ul {
     padding: 0;
 }
 
-.navbar {
+/*.navbar {
     border: none;
 }
 
 .wrapper {
-  margin: 0 auto;
-  padding: 40px;
-  max-width: 800px;
-}
+    margin: 0 auto;
+    padding: 40px;
+    max-width: 800px;
+}*/
 
 .table {
-  margin: 0 0 40px 0;
-  width: 100%;
-  display: table;
+    margin: 0 0 40px 0;
+    width: 100%;
+    display: table;
 }
-@media screen and (max-width: 580px) {
+@media screen and (max-width: 600px) {
   .table {
-    display: block;
+      /*display: block;*/
+      font-size: 14px;
   }
 }
 
 .table-row {
-  display: table-row;
-  background: #f6f6f6;
+    display: table-row;
+    background: #f6f6f6;
 }
 .table-row:nth-of-type(odd) {
-  background: #DDDDDD;
+    background: #DDDDDD;
 }
 .table-row.header {
-  font-weight: 900;
-  color: #ffffff;
-  background: #4478d6;
+    font-weight: 900;
+    color: #ffffff;
+    background: #4478d6;
 }
 .table-row.green {
-  background: #27ae60;
+    background: #27ae60;
 }
 .table-row.blue {
-  background: #2980b9;
-}
-@media screen and (max-width: 580px) {
-  .table-row {
-    padding: 8px 0;
-    display: block;
-  }
+    background: #2980b9;
 }
 
 .cell {
-  padding: 6px 12px;
-  display: table-cell;
+    padding: 6px 12px;
+    display: table-cell;
 }
-@media screen and (max-width: 580px) {
+
+.cell > input {
+    background: none;
+    border: none;
+    text-align: center;
+}
+/*@media screen and (max-width: 600px) {
+  .table-row {
+        padding: 8px 0;
+        display: block;
+  }
+}*/
+
+
+/*@media screen and (max-width: 600px) {
   .cell {
     padding: 2px 12px;
     display: block;
   }
-}
+}*/
 
 @media all and (max-width: 600px) {
     .header-container {
@@ -349,6 +358,9 @@ footer ul {
     }
     
     nav {
+        display: none;
+    }
+    .cell.actions {
         display: none;
     }
 }
