@@ -2,36 +2,32 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="shortcut icon" type="image/css" href="http://theme.co/x/demo/icon/1/wp-content/uploads/sites/2/2013/07/3-loupe.png" />
+    <title>Collage system</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Collage system", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Courses", "Index", "Home", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("Students", "Index", "Home", new { area = "" }, null)</li>*@
-                    <li><a href="#courses">Courses</a></li>
-                    <li><a href="#students">Students</a></li>
-                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="container body-content">
+
+<div class="main-container">
+
+    <header class="header-container">
+        <div class="header-logo"></div>
+        @*<img src="http://theme.co/x/demo/icon/1/wp-content/uploads/sites/2/2013/07/3-loupe.png">*@
+        <h1 class="main-header">Collage system manager</h1>
+    </header>
+
+    <nav class="nav-container">
+        <ul class="nav-list">
+            <li><a href="#students">Students</a></li>
+            <li><a href="#courses">Courses</a></li>
+        </ul>
+    </nav>
+
+    <article class="content-container body-content">
         @RenderBody()
-    </div>
+    </article>
 
     <footer class="clearfix" role="contentinfo">
         <div class="container">
@@ -48,9 +44,31 @@
             </div>
         </div>
     </footer>
+</div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
 </body>
 </html>
+<!--<div class="navbar navbar-inverse">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Collage system", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                @*<li>@Html.ActionLink("Courses", "Index", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("Students", "Index", "Home", new { area = "" }, null)</li>*@
+                <li><a href="#courses">Courses</a></li>
+                <li><a href="#students">Students</a></li>
+                <li><@Html.ActionLink("API", "Index", "Help", new {area = ""}, null)</li>
+            </ul>
+        </div>
+    </div>
+</div> -->
