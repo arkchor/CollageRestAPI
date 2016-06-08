@@ -65,7 +65,50 @@
 <section id="students" class="table-section default-section">
     <h2>Students table</h2>
 
-    <div class="table">
+    <table class="table">
+        <thead class="header">
+            <tr class="table-row">
+                <th class="cell">Index</th>
+                <th class="cell">First name</th>
+                <th class="cell">Last name</th>
+                <th class="cell">Birth date</th>
+                <th class="cell">Actions</th>
+            </tr>
+        </thead>
+        <!-- Todo: Generate table body -->
+        <tbody data-bind="foreach: students">
+            <tr class="table-row">
+                <th class="cell">
+                    <span data-bind="text: Id"></span>
+                </th>
+                <th class="cell">
+                    <input type="text" data-bind="value: FirstName" />
+                </th>
+                <th class="cell">
+                    <input type="text" data-bind="value: LastName" />
+                </th>
+                <th class="cell">
+                    <input type="date" data-bind="datePicker: BornDate" />
+                </th>
+                <th class="cell actions">
+                    <button>
+                        See grades
+                    </button>
+                    <button>
+                        See courses
+                    </button>
+                    <button>
+                        Save
+                    </button>
+                    <button>
+                        Delete
+                    </button>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+
+    @*<div class="table">
 
         <div class="table-row header">
             <div class="cell">
@@ -85,7 +128,38 @@
             </div>
         </div>
 
-        <div class="table-row">
+        <div data-bind="foreach: students">
+            <div class="table-row">
+                <div class="cell">
+                    <span data-bind="text: Id"></span>
+                </div>
+                <div class="cell">
+                    <input type="text" data-bind="value: FirstName" />
+                </div>
+                <div class="cell">
+                    <input type="text" data-bind="value: LastName" />
+                </div>
+                <div class="cell">
+                    <input type="date" data-bind="text: BornDate" />
+                </div>
+                <div class="cell actions">
+                    <button>
+                        See grades
+                    </button>
+                    <button>
+                        See courses
+                    </button>
+                    <button>
+                        Save
+                    </button>
+                    <button>
+                        Delete
+                    </button>
+                </div>
+            </div>
+        </div>*@    
+
+        @*<div class="table-row">
             <div class="cell">
                 109501
             </div>
@@ -130,7 +204,7 @@
             <div class="cell actions">
 
             </div>
-        </div>
+        </div>*@
 
     </div>
 </section>

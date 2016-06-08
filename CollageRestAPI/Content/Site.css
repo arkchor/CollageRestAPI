@@ -303,7 +303,12 @@ footer ul {
 .table-row:hover {
     background-color: #acacac;
 }
-.table-row.header {
+.header .table-row {
+    font-weight: 900;
+    color: #ffffff;
+    background: #4478d6;
+}
+.table-row.header  {
     font-weight: 900;
     color: #ffffff;
     background: #4478d6;
@@ -318,12 +323,17 @@ footer ul {
 .cell {
     padding: 6px 12px;
     display: table-cell;
+    text-align: center;
 }
 
 .cell > input {
     background: none;
     border: none;
     text-align: center;
+}
+
+.cell > span {
+    font-weight: normal;
 }
 /*@media screen and (max-width: 600px) {
   .table-row {

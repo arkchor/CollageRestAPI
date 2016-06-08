@@ -3,6 +3,120 @@
 var apiStudents = "http://localhost:5501/api/students";
 var apiCourses = "http://localhost:5501/api/courses";
 
+function Student(data) {
+    this.Id = ko.observable(data.Id);
+}
+
+//ko.bindingHandlers.datePicker = {
+//    init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+//        // Register change callbacks to update the model
+//        // if the control changes.       
+//        ko.utils.registerEventHandler(element, "change", function () {
+//            //var value = valueAccessor();
+//            var value = ko.unwrap(valueAccessor());
+//            value(new Date(element.value));
+//        });
+//    },
+//    // Update the control whenever the view model changes
+//    update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+//        var value = ko.unwrap(valueAccessor());
+//        element.value = value().toISOString();
+//    }
+//};
+
+ko.bindingHandlers.datePicker = {
+    init: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+        // Register change callbacks to update the model
+        // if the control changes.
+        ko.utils.registerEventHandler(element,
+            "change",
+            function() {
+                var value = valueAccessor();
+                value(moment(element.value).format());
+            });
+    },
+    // Update the control whenever the view model changes
+    update: function(element, valueAccessor, allBindingsAccessor, viewModel) {
+        var value = valueAccessor();
+        element.value = moment(value()).format("YYYY-MM-DD");
+    }
+};
+
+var ViewModel = function() {
+    var self = this;
+
+    self.students = ko.observableArray([]);
+    self.courses = ko.observableArray([]);
+
+    //self.getStudents = function() {
+    //    $.ajax({
+    //        type: "GET",
+    //        url: apiStudents,
+    //        contentType: "application/json; charset=utf-8",
+    //        dataType: "json",
+    //        success: function (data) {
+    //            console.log(data); //Put the response in ObservableArray
+    //            self.students = ko.mapping.fromJS(data, ViewModel);
+    //        },
+    //        error: function (error) {
+    //            alert(error.status + "<--and--> " + error.statusText);
+    //        }
+    //    });
+    //}
+
+    //$.ajax({
+    //    type: "GET",
+    //    url: apiStudents,
+    //    contentType: "application/json; charset=utf-8",
+    //    dataType: "json",
+    //    success: function (data) {
+    //        console.log(data); //Put the response in ObservableArray
+    //        console.log(self.students());
+    //        self.students = ko.mapping.fromJS(data, ViewModel);
+    //        console.log(self.students());
+    //    },
+    //    error: function (error) {
+    //        alert(error.status + "<--and--> " + error.statusText);
+    //    }
+    //});
+
+    //$.getJSON(apiStudents, function (data) {
+    //    console.log(data); //Put the response in ObservableArray
+    //    console.log(self.students());
+    //    self.students = ko.mapping.fromJS(data, ViewModel);
+    //    console.log(self.students());
+    //});
+    $.ajax({
+        type: "GET",
+        url: apiStudents,
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            console.log(data); //Put the response in ObservableArray
+            console.log(self.students());
+
+            //self.students = ko.mapping.fromJS(data, ViewModel);
+            //self.students(ko.mapping.fromJS(data, ViewModel));
+
+            //var mappedStudents = $.map(data, function (item) { return new Student(item) });
+            var mappedStudents = ko.mapping.fromJS(data, ViewModel);
+            console.log(mappedStudents());
+            self.students(mappedStudents());
+
+            console.log(self.students());
+            console.log(self.students()[0].BornDate());
+        },
+        error: function (error) {
+            alert(error.status + "<--and--> " + error.statusText);
+        }
+    });
+
+    //$(function() {
+        
+    //});
+}
+ko.applyBindings(new ViewModel());
+
 var EmpViewModel = function () {
     //Make the self as 'this' reference
     var self = this;
@@ -115,17 +229,18 @@ var EmpViewModel = function () {
 };
 //ko.applyBindings(new EmpViewModel());
 
-$(function() {
-    $.ajax({
-        type: "GET",
-        url: apiStudents,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (data) {
-            console.log(data); //Put the response in ObservableArray
-        },
-        error: function (error) {
-            alert(error.status + "<--and--> " + error.statusText);
-        }
-    });
-});
+//$(function() {
+//    $.ajax({
+//        type: "GET",
+//        url: apiStudents,
+//        contentType: "application/json; charset=utf-8",
+//        dataType: "json",
+//        success: function (data) {
+//            console.log(data); //Put the response in ObservableArray
+//        },
+//        error: function (error) {
+//            alert(error.status + "<--and--> " + error.statusText);
+//        }
+//    });
+//    ViewModel.getStudents();
+//});
