@@ -6,7 +6,7 @@
             <tr class="table-row">
                 <th class="cell">Course name</th>
                 <th class="cell">Tutor name</th>
-                <th class="cell">Numeber of students</th>
+                @*<th class="cell">Numeber of students</th>*@
                 <th class="cell">Actions</th>
             </tr>
         </thead>
@@ -19,9 +19,9 @@
                 <th class="cell">
                     <input type="text" data-bind="value: Tutor" required />
                 </th>
-                <th class="cell">
+                @*<th class="cell">
                     <input type="number" value="15" required />
-                </th>
+                </th>*@
                 <th class="cell actions">
                     <div class="action-buttons">
                         <div data-bind="visible: Id() != '' ">
@@ -44,7 +44,7 @@
             <tr class="table-row button-row">
                 <th class="cell"></th>
                 <th class="cell"></th>
-                <th class="cell"></th>
+                @*<th class="cell"></th>*@
 
                 <th class="cell">
                     <button data-bind="click: prepareCourse, visible: !newCoursePreparation()">
