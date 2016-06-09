@@ -294,21 +294,26 @@ footer ul {
     display: table-row;
     background: #f6f6f6;
 }
-.table-row:not(.header) {
+.table-row:not(.table-header) {
     color: black;
 }
 .table-row:nth-of-type(odd) {
     background: #DDDDDD;
 }
 .table-row:hover {
-    background-color: #acacac;
+    background-color: #c9c9c9;
 }
-.header .table-row {
+.table-header .table-row {
     font-weight: 900;
     color: #ffffff;
     background: #4478d6;
 }
-.table-row.header  {
+.table-footer .table-row {
+    font-weight: 900;
+    color: #ffffff;
+    background: #4478d6;
+}
+.table-row.table-header  {
     font-weight: 900;
     color: #ffffff;
     background: #4478d6;
@@ -331,10 +336,26 @@ footer ul {
     border: none;
     text-align: center;
 }
+.cell > input:hover {
+    /*outline-color: #4478d6;*/
+    outline-color: white;
+    outline-width: 5px;
+    outline-style: auto;
+}
 
 .cell > span {
     font-weight: normal;
 }
+
+/*.action-buttons > div {
+    display: flex;
+    justify-content: center;
+}*/
+
+input[type=date] {
+    
+}
+
 /*@media screen and (max-width: 600px) {
   .table-row {
         padding: 8px 0;

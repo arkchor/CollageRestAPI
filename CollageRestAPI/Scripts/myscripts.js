@@ -1,11 +1,13 @@
 ﻿"use strict";
 
+if (!Array.prototype.last) {
+    Array.prototype.last = function () {
+        return this[this.length - 1];
+    };
+};
+
 var apiStudents = "http://localhost:5501/api/students";
 var apiCourses = "http://localhost:5501/api/courses";
-
-function Student(data) {
-    this.Id = ko.observable(data.Id);
-}
 
 //ko.bindingHandlers.datePicker = {
 //    init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
@@ -42,11 +44,38 @@ ko.bindingHandlers.datePicker = {
     }
 };
 
+var StudentModel = function () {
+    var self = this;
+    self.Id = "";
+    self.FirstName = "";
+    self.LastName = "";
+    self.BornDate = "";
+    //self.ToCreate = true;
+}
+
+var CourseModel = function () {
+    var self = this;
+    self.Id = "";
+    self.CourseName = "";
+    self.Tutor = "";
+}
+
+//var StudentModel = function () {
+//    var self = this;
+//    self.Id = ko.observable();
+//    self.FirstName = ko.observable();
+//    self.LastName = ko.observable();
+//    self.BornDate = ko.observable();
+//}
+
 var ViewModel = function() {
     var self = this;
 
     self.students = ko.observableArray([]);
     self.courses = ko.observableArray([]);
+
+    self.newStudentPreparation = ko.observable(false);
+    self.newCoursePreparation = ko.observable(false);
 
     //self.getStudents = function() {
     //    $.ajax({
@@ -86,36 +115,229 @@ var ViewModel = function() {
     //    self.students = ko.mapping.fromJS(data, ViewModel);
     //    console.log(self.students());
     //});
-    $.ajax({
-        type: "GET",
-        url: apiStudents,
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (data) {
-            console.log(data); //Put the response in ObservableArray
-            console.log(self.students());
 
-            //self.students = ko.mapping.fromJS(data, ViewModel);
-            //self.students(ko.mapping.fromJS(data, ViewModel));
+    /*=======================================
+      ============= STUDENTS ================
+      =======================================*/
 
-            //var mappedStudents = $.map(data, function (item) { return new Student(item) });
-            var mappedStudents = ko.mapping.fromJS(data, ViewModel);
-            console.log(mappedStudents());
-            self.students(mappedStudents());
+    self.getStudents = function() {
+        $.ajax({
+            type: "GET",
+            url: apiStudents,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(data) {
+                console.log(data); //Put the response in ObservableArray
+                console.log(self.students());
 
-            console.log(self.students());
-            console.log(self.students()[0].BornDate());
-        },
-        error: function (error) {
-            alert(error.status + "<--and--> " + error.statusText);
+                //self.students = ko.mapping.fromJS(data, ViewModel);
+                //self.students(ko.mapping.fromJS(data, ViewModel));
+
+                //var mappedStudents = $.map(data, function (item) { return new Student(item) });
+                var mappedStudents = ko.mapping.fromJS(data, ViewModel);
+                console.log(mappedStudents());
+                self.students(mappedStudents());
+
+                console.log(self.students());               
+                console.log(self.students()[0].BornDate());
+                console.log(self);
+
+                //console.log("#################");
+                //console.log(self.students().length);
+                //console.log(self.students()[self.students().length - 1]);
+                //console.log(self.students().last());
+                console.log(self.newStudentPreparation());
+            },
+            error: function(error) {
+                alert(error.status + "<--and--> " + error.statusText);
+            }
+        });       
+    }
+
+    self.prepareStudent = function () {
+        var mappedStudent = ko.mapping.fromJS(new StudentModel(), ViewModel);
+        //console.log(mappedStudent);
+        //self.students().push(mappedStudent);
+        //self.students().push(new StudentModel());
+        //self.students.push(new StudentModel());
+        self.students.push(mappedStudent);
+        console.log(self.students());
+        self.newStudentPreparation(true);
+    }
+
+    self.cancelPrepareStudent = function () {
+        self.students.pop();
+        console.log(self.students());
+        self.newStudentPreparation(false);
+    }
+
+    self.createStudent = function () {
+        if (self.students().last().FirstName() === "" ||
+            self.students().last().LastName() === "" ||
+            self.students().last().BornDate() === "") {
+
+            console.log(ko.toJSON(ko.mapping.toJS(self.students().last())));
+            alert("Proszę wypełnić pola!");
+        } else {
+            $.ajax({
+                type: "POST",
+                url: apiStudents,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: ko.toJSON(ko.mapping.toJS(self.students().last())),
+                success: function (data) {
+                    //alert("Utworzono studenta!");
+                    console.log(data);
+                    self.newStudentPreparation(false);
+                    self.getStudents();
+                },
+                error: function (error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+        }       
+    }
+
+    self.updateStudent = function (student) {
+        var confirmationValue = confirm("Czy na pewno chcesz zmienić dane studenta?");
+        if (confirmationValue) {
+            $.ajax({
+                type: "PUT",
+                url: apiStudents + "?id=" + student.Id(),
+                contentType: "application/json; charset=utf-8",
+                data: ko.toJSON(ko.mapping.toJS(student)),
+                success: function (data) {
+                    self.getStudents();
+                    alert("Dane studenta zostały zaktualizowane!");
+                },
+                error: function (error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+        }      
+    }
+
+    self.deleteStudent = function (student) {
+        var confirmationValue = confirm("Czy na pewno chcesz usunąć studenta?");
+        if (confirmationValue) {
+            $.ajax({
+                type: "DELETE",
+                url: apiStudents + "?id=" + student.Id(),
+                success: function(data) {
+                    self.getStudents();
+                },
+                error: function(error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
         }
-    });
+    }
 
-    //$(function() {
-        
-    //});
+    self.seeStudentGrades = function(student) {
+        //console.log(ko.toJSON(ko.mapping.toJS(student)));
+    }
+
+    /*=======================================
+      ============== COURSES ================
+      =======================================*/
+
+    self.getCourses = function () {
+        $.ajax({
+            type: "GET",
+            url: apiCourses,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {              
+                var mappedCourses = ko.mapping.fromJS(data, ViewModel);
+                console.log(mappedCourses());
+                self.courses(mappedCourses());
+            },
+            error: function (error) {
+                alert(error.status + "<--and--> " + error.statusText);
+            }
+        });
+    }
+
+    self.prepareCourse = function () {
+        var mappedCourse = ko.mapping.fromJS(new CourseModel(), ViewModel);
+        self.courses.push(mappedCourse);
+        self.newCoursePreparation(true);
+    }
+
+    self.cancelPrepareCourse = function () {
+        self.courses.pop();
+        self.newCoursePreparation(false);
+    }
+
+    self.createCourse = function () {
+        if (self.courses().last().CourseName() === "" ||
+            self.courses().last().Tutor() === "") {
+
+            alert("Proszę wypełnić pola!");
+        } else {
+            $.ajax({
+                type: "POST",
+                url: apiCourses,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: ko.toJSON(ko.mapping.toJS(self.courses().last())),
+                success: function (data) {
+                    //alert("Utworzono studenta!");
+                    console.log(data);
+                    self.newCoursePreparation(false);
+                    self.getCourses();
+                },
+                error: function (error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+        }
+    }
+
+    self.updateCourse = function (course) {
+        var confirmationValue = confirm("Czy na pewno chcesz zmienić dane kursu?");
+        if (confirmationValue) {
+            $.ajax({
+                type: "PUT",
+                url: apiCourses + "?courseName=" + course.CourseName(),
+                contentType: "application/json; charset=utf-8",
+                data: ko.toJSON(ko.mapping.toJS(course)),
+                success: function (data) {
+                    self.getCourses();
+                    alert("Dane kursu zostały zaktualizowane!");
+                },
+                error: function (error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+        }
+    }
+
+    self.deleteCourse = function (course) {
+        var confirmationValue = confirm("Czy na pewno chcesz usunąć kurs?");
+        if (confirmationValue) {
+            $.ajax({
+                type: "DELETE",
+                url: apiCourses + "?courseName=" + course.CourseName(),
+                success: function (data) {
+                    self.getCourses();
+                },
+                error: function (error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+        }
+    }
+
+    self.seeCourseGrades = function (course) {
+        //console.log(ko.toJSON(ko.mapping.toJS(student)));
+    }
 }
-ko.applyBindings(new ViewModel());
+
+var vm = new ViewModel();
+vm.getStudents();
+vm.getCourses();
+ko.applyBindings(vm);
 
 var EmpViewModel = function () {
     //Make the self as 'this' reference

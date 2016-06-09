@@ -134,7 +134,7 @@ namespace CollageRestAPI.Controllers
         =========== PUT METHODS =================
         =======================================*/
         [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateCourseByName")]
-        public IHttpActionResult UpdateCourse(string courseName, CourseModel courseToUpdate)
+        public IHttpActionResult UpdateCourse(string courseName, [FromBody]CourseModel courseToUpdate)
         {
             courseToUpdate.Links = LinkManager.SingleCourseLinks(Url, courseToUpdate.CourseName);
             BaseRepository.Instance.CoursesCollection.Update(courseToUpdate);
@@ -142,7 +142,7 @@ namespace CollageRestAPI.Controllers
             return Ok();
         }
         [HttpPut, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "UpdateGradeForStudent")] //TODO
-        public IHttpActionResult UpdateGradeForStudent(int id, GradeModel gradeToUpdate)
+        public IHttpActionResult UpdateGradeForStudent(int id, [FromBody]GradeModel gradeToUpdate)
         {
             throw new NotImplementedException();
         }
@@ -179,7 +179,9 @@ namespace CollageRestAPI.Controllers
         [HttpDelete, Route(WebApiConfig.RoutesTemplates.Courses, Name = "DeleteCourseByName")] //TODO
         public IHttpActionResult DeleteCourse(string courseName)
         {
-            throw new NotImplementedException();
+            BaseRepository.Instance.CoursesCollection.Delete(course => course.CourseName == courseName);
+
+            return Ok();
         }
         [HttpDelete, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "DeleteGradeForStudent")] //TODO
         public IHttpActionResult DeleteGradeForStudent(int id, DateTime dateOfIssue)

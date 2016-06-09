@@ -1,72 +1,130 @@
 ﻿<section id="courses" class="table-section">
     <h2>Courses table</h2>
 
-    <div class="table">
+    <table class="table">
+        <thead class="table-header">
+            <tr class="table-row">
+                <th class="cell">Course name</th>
+                <th class="cell">Tutor name</th>
+                <th class="cell">Numeber of students</th>
+                <th class="cell">Actions</th>
+            </tr>
+        </thead>
+        <!-- Todo: Generate table body -->
+        <tbody data-bind="foreach: courses">
+            <tr class="table-row">
+                <th class="cell">
+                    <input type="text" data-bind="value: CourseName" required />
+                </th>
+                <th class="cell">
+                    <input type="text" data-bind="value: Tutor" required />
+                </th>
+                <th class="cell">
+                    <input type="number" value="15" required />
+                </th>
+                <th class="cell actions">
+                    <div class="action-buttons">
+                        <div data-bind="visible: Id() != '' ">
+                            <button data-bind="click: $root.seeCourseGrades">See grades</button>
+                            <button>See students</button>
+                            <button data-bind="click: $root.updateCourse">Save</button>
+                            <button data-bind="click: $root.deleteCourse">Delete</button>
+                        </div>
+                        <div data-bind="visible: Id() == '' ">
+                            <button data-bind="click: $root.createCourse">
+                                Create
+                            </button>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+        </tbody>
 
-        <div class="table-row header">
-            <div class="cell">
-                Course name
-            </div>
-            <div class="cell">
-                Tutor name
-            </div>
-            <div class="cell">
-                Number of students
-            </div>
-            <div class="cell actions">
-                Actions
-            </div>
-        </div>
+        <tfoot class="table-footer">
+            <tr class="table-row button-row">
+                <th class="cell"></th>
+                <th class="cell"></th>
+                <th class="cell"></th>
 
-        <div class="table-row">
-            <div class="cell">
-                <input type="text" value="TPSI" />
-            </div>
-            <div class="cell">
-                <input type="text" value="Tomasz Pawlak" />
-            </div>
-            <div class="cell">
-                <input type="number" value="15" />
-            </div>
-            <div class="cell actions">
-                <button>
-                    See grades
-                </button>
-                <button>
-                    See students
-                </button>
-                <button>
-                    Save
-                </button>
-                <button>
-                    Delete
-                </button>
-            </div>
-        </div>
+                <th class="cell">
+                    <button data-bind="click: prepareCourse, visible: !newCoursePreparation()">
+                        Add course
+                    </button>
+                    <button data-bind="click: cancelPrepareCourse, visible: newCoursePreparation()">
+                        Cancel adding
+                    </button>
+                </th>
+            </tr>
+        </tfoot>
 
-        <div class="table-row">
-            <div class="cell">
-                <input type="text" value="TPSI2" />
-            </div>
-            <div class="cell">
-                <input type="text" value="Abc Def" />
-            </div>
-            <div class="cell">
-                <input type="number" value="15" />
-            </div>
-            <div class="cell actions">
+    </table>
 
-            </div>
-        </div>
+        @*<div class="table">
 
-    </div>
+                <div class="table-row table-header">
+                    <div class="cell">
+                        Course name
+                    </div>
+                    <div class="cell">
+                        Tutor name
+                    </div>
+                    <div class="cell">
+                        Number of students
+                    </div>
+                    <div class="cell actions">
+                        Actions
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="cell">
+                        <input type="text" value="TPSI" />
+                    </div>
+                    <div class="cell">
+                        <input type="text" value="Tomasz Pawlak" />
+                    </div>
+                    <div class="cell">
+                        <input type="number" value="15" />
+                    </div>
+                    <div class="cell actions">
+                        <button>
+                            See grades
+                        </button>
+                        <button>
+                            See students
+                        </button>
+                        <button>
+                            Save
+                        </button>
+                        <button>
+                            Delete
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-row">
+                    <div class="cell">
+                        <input type="text" value="TPSI2" />
+                    </div>
+                    <div class="cell">
+                        <input type="text" value="Abc Def" />
+                    </div>
+                    <div class="cell">
+                        <input type="number" value="15" />
+                    </div>
+                    <div class="cell actions">
+
+                    </div>
+                </div>
+
+            </div>*@
 </section>
 
 <section id="students" class="table-section default-section">
     <h2>Students table</h2>
 
     <table class="table">
-        <thead class="header">
+        <thead class="table-header">
             <tr class="table-row">
                 <th class="cell">Index</th>
                 <th class="cell">First name</th>
@@ -82,30 +140,50 @@
                     <span data-bind="text: Id"></span>
                 </th>
                 <th class="cell">
-                    <input type="text" data-bind="value: FirstName" />
+                    <input type="text" data-bind="value: FirstName" required />
                 </th>
                 <th class="cell">
-                    <input type="text" data-bind="value: LastName" />
+                    <input type="text" data-bind="value: LastName" required />
                 </th>
                 <th class="cell">
-                    <input type="date" data-bind="datePicker: BornDate" />
+                    <input type="date" data-bind="datePicker: BornDate" required />
                 </th>
                 <th class="cell actions">
-                    <button>
-                        See grades
+                    <div class="action-buttons">
+                        <div data-bind="visible: Id() != '' ">
+                            <button data-bind="click: $root.seeStudentGrades">See grades</button>
+                            <button>See courses</button>
+                            <button data-bind="click: $root.updateStudent">Save</button>
+                            <button data-bind="click: $root.deleteStudent">Delete</button>
+                        </div>
+                        <div data-bind="visible: Id() == '' ">                     
+                            <button data-bind="click: $root.createStudent">
+                                Create
+                            </button>
+                        </div>                        
+                    </div>
+                </th>
+            </tr>           
+        </tbody>
+
+        <tfoot class="table-footer">
+            <tr class="table-row button-row">
+                <th class="cell"></th>
+                <th class="cell"></th>
+                <th class="cell"></th>
+                <th class="cell"></th>
+
+                <th class="cell">
+                    <button data-bind="click: prepareStudent, visible: !newStudentPreparation()">
+                        Add student
                     </button>
-                    <button>
-                        See courses
-                    </button>
-                    <button>
-                        Save
-                    </button>
-                    <button>
-                        Delete
+                    <button data-bind="click: cancelPrepareStudent, visible: newStudentPreparation()">
+                        Cancel adding
                     </button>
                 </th>
             </tr>
-        </tbody>
+        </tfoot>
+
     </table>
 
     @*<div class="table">
@@ -204,9 +282,9 @@
             <div class="cell actions">
 
             </div>
-        </div>*@
+        </div>
 
-    </div>
+    </div>*@
 </section>
 
 @*<div style="font-size: 30px; display: block; color: #D7D7D7;">
