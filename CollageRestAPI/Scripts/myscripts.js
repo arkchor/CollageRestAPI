@@ -60,6 +60,13 @@ var CourseModel = function () {
     self.Tutor = "";
 }
 
+var GradeModel = function () {
+    var self = this;
+    self.Id = "";
+    self.Value = "";
+    self.IssueDateTime = "";
+}
+
 //var StudentModel = function () {
 //    var self = this;
 //    self.Id = ko.observable();
@@ -73,9 +80,13 @@ var ViewModel = function() {
 
     self.students = ko.observableArray([]);
     self.courses = ko.observableArray([]);
+    self.grades = ko.observableArray([]);
 
     self.newStudentPreparation = ko.observable(false);
     self.newCoursePreparation = ko.observable(false);
+    self.newGradePreparation = ko.observable(false);
+
+    self.currentStudentForGradeView = ko.observable(new StudentModel());
 
     //self.getStudents = function() {
     //    $.ajax({
@@ -233,8 +244,9 @@ var ViewModel = function() {
         }
     }
 
-    self.seeStudentGrades = function(student) {
-        //console.log(ko.toJSON(ko.mapping.toJS(student)));
+    self.seeStudentGrades = function (student) {
+
+        return true;
     }
 
     /*=======================================
@@ -332,6 +344,103 @@ var ViewModel = function() {
     self.seeCourseGrades = function (course) {
         //console.log(ko.toJSON(ko.mapping.toJS(student)));
     }
+
+    /*=======================================
+      =============== GRADES ================
+      =======================================*/
+
+    self.getStudentGrades = function (student) {
+        $.ajax({
+            type: "GET",
+            url: apiStudents + "/grades?id=" + student.Id(),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                var mappedGrades = ko.mapping.fromJS(data, ViewModel);
+                console.log(mappedGrades());
+                self.grades(mappedGrades());
+            },
+            error: function (error) {
+                alert(error.status + "<--and--> " + error.statusText);
+            }
+        });
+
+        self.currentStudentForGradeView(student);
+        //console.log(self.currentStudentForGradeView.FirstName());
+
+        return true;
+    }
+
+    self.prepareGrade = function () {
+        var mappedCourse = ko.mapping.fromJS(new CourseModel(), ViewModel);
+        self.courses.push(mappedCourse);
+        self.newCoursePreparation(true);
+    }
+
+    self.cancelPrepareGrade = function () {
+        self.courses.pop();
+        self.newCoursePreparation(false);
+    }
+
+    self.createGrade = function () {
+        if (self.courses().last().CourseName() === "" ||
+            self.courses().last().Tutor() === "") {
+
+            alert("Proszę wypełnić pola!");
+        } else {
+            $.ajax({
+                type: "POST",
+                url: apiCourses,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                data: ko.toJSON(ko.mapping.toJS(self.courses().last())),
+                success: function (data) {
+                    //alert("Utworzono studenta!");
+                    console.log(data);
+                    self.newCoursePreparation(false);
+                    self.getCourses();
+                },
+                error: function (error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+        }
+    }
+
+    self.updateGrade = function (course) {
+        var confirmationValue = confirm("Czy na pewno chcesz zmienić dane kursu?");
+        if (confirmationValue) {
+            $.ajax({
+                type: "PUT",
+                url: apiCourses + "?courseName=" + course.CourseName(),
+                contentType: "application/json; charset=utf-8",
+                data: ko.toJSON(ko.mapping.toJS(course)),
+                success: function (data) {
+                    self.getCourses();
+                    alert("Dane kursu zostały zaktualizowane!");
+                },
+                error: function (error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+        }
+    }
+
+    self.deleteGrade = function (course) {
+        var confirmationValue = confirm("Czy na pewno chcesz usunąć kurs?");
+        if (confirmationValue) {
+            $.ajax({
+                type: "DELETE",
+                url: apiCourses + "?courseName=" + course.CourseName(),
+                success: function (data) {
+                    self.getCourses();
+                },
+                error: function (error) {
+                    alert(error.status + "<--and--> " + error.statusText);
+                }
+            });
+        }
+    }   
 }
 
 var vm = new ViewModel();
