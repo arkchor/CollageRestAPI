@@ -127,7 +127,7 @@ namespace CollageRestAPI.Controllers
             BaseRepository.Instance.StudentsCollection.Update(student);
             BaseRepository.Instance.CoursesCollection.Update(course);
 
-            return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, courseName, new ObjectId(gradeToCreate.Id)).Href, "");
+            return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, courseName, gradeToCreate.Id).Href, "");
         }
 
         /*=======================================
