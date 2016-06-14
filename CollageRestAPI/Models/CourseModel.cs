@@ -15,10 +15,11 @@ namespace CollageRestAPI.Models
 {
     //[DataContract(IsReference = true)]
     [CollectionName(DatabaseConfig.CoursesCollectionName)]
-    public class CourseModel : IEntity<ObjectId>
+    public class CourseModel : IEntity<string>
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
         public string CourseName { get; set; }
         public string Tutor { get; set; }
         [IgnoreDataMember]

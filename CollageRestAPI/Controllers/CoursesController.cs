@@ -22,7 +22,7 @@ namespace CollageRestAPI.Controllers
         {
             if (id != null)
             {
-                return Ok(BaseRepository.Instance.CoursesCollection.Single(x => x.Id == new ObjectId(id)));
+                return Ok(BaseRepository.Instance.CoursesCollection.Single(x => x.Id == id));
             }
             if (courseName == null && tutor == null)
             {
@@ -120,14 +120,14 @@ namespace CollageRestAPI.Controllers
             gradeToCreate.CourseReference = new MongoDBRef(DatabaseConfig.CoursesCollectionName, course.Id);
             gradeToCreate.StudentReference = new MongoDBRef(DatabaseConfig.StudentsCollectionName, student.Id);
             BaseRepository.Instance.GradesCollection.Add(gradeToCreate);
-            gradeToCreate.Links = LinkManager.SingleGradeLinks(Url, gradeToCreate.Id);
+            gradeToCreate.Links = LinkManager.SingleGradeLinks(Url, new ObjectId(gradeToCreate.Id));
             BaseRepository.Instance.GradesCollection.Update(gradeToCreate);
             course.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, gradeToCreate.Id));
             student.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, gradeToCreate.Id));
             BaseRepository.Instance.StudentsCollection.Update(student);
             BaseRepository.Instance.CoursesCollection.Update(course);
 
-            return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, courseName, gradeToCreate.Id).Href, "");
+            return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, courseName, new ObjectId(gradeToCreate.Id)).Href, "");
         }
 
         /*=======================================

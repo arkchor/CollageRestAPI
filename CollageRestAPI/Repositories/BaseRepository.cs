@@ -31,8 +31,8 @@ namespace CollageRestAPI.Repositories
         //public List<CourseModel> CoursesCollection { get; set; } = new List<CourseModel>();
 
         public MongoRepository<StudentModel, int> StudentsCollection { get; set; } = new MongoRepository<StudentModel, int>();
-        public MongoRepository<CourseModel, ObjectId> CoursesCollection { get; set; } = new MongoRepository<CourseModel, ObjectId>();
-        public MongoRepository<GradeModel, ObjectId> GradesCollection { get; set; } = new MongoRepository<GradeModel, ObjectId>();
+        public MongoRepository<CourseModel, string> CoursesCollection { get; set; } = new MongoRepository<CourseModel, string>();
+        public MongoRepository<GradeModel, string> GradesCollection { get; set; } = new MongoRepository<GradeModel, string>();
         public MongoRepository<IndexConfig, ObjectId> CurrentIndexConfig { get; set; } = new MongoRepository<IndexConfig, ObjectId>();
     }
 }

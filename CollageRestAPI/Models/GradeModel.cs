@@ -15,10 +15,11 @@ namespace CollageRestAPI.Models
 {
     //[DataContract(IsReference = true)]
     [CollectionName(DatabaseConfig.GradesCollectionName)]
-    public class GradeModel : IEntity<ObjectId>
+    public class GradeModel : IEntity<string>
     {
         [BsonId]
-        public ObjectId Id { get; set; }
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; }
         public double Value { get; set; }
         public DateTime IssueDateTime { get; set; }       
         [IgnoreDataMember]
