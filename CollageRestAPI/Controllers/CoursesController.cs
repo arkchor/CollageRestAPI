@@ -129,13 +129,13 @@ namespace CollageRestAPI.Controllers
         {
             var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
-            gradeToCreate.CourseReference = new MongoDBRef(DatabaseConfig.CoursesCollectionName, course.Id);
+            gradeToCreate.CourseReference = new MongoDBRef(DatabaseConfig.CoursesCollectionName, new ObjectId(course.Id));
             gradeToCreate.StudentReference = new MongoDBRef(DatabaseConfig.StudentsCollectionName, student.Id);
             BaseRepository.Instance.GradesCollection.Add(gradeToCreate);
             gradeToCreate.Links = LinkManager.SingleGradeLinks(Url, new ObjectId(gradeToCreate.Id));
             BaseRepository.Instance.GradesCollection.Update(gradeToCreate);
-            course.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, gradeToCreate.Id));
-            student.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, gradeToCreate.Id));
+            course.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, new ObjectId(gradeToCreate.Id)));
+            student.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, new ObjectId(gradeToCreate.Id)));
             BaseRepository.Instance.StudentsCollection.Update(student);
             BaseRepository.Instance.CoursesCollection.Update(course);
 
@@ -167,12 +167,12 @@ namespace CollageRestAPI.Controllers
             if (unregister)
             {              
                 course.StudentsReferences.Remove(new MongoDBRef(DatabaseConfig.StudentsCollectionName, student.Id));
-                student.CoursesReferences.Remove(new MongoDBRef(DatabaseConfig.CoursesCollectionName, course.Id));
+                student.CoursesReferences.Remove(new MongoDBRef(DatabaseConfig.CoursesCollectionName, new ObjectId(course.Id)));
             }
             else
             {
                 course.StudentsReferences.Add(new MongoDBRef(DatabaseConfig.StudentsCollectionName, student.Id));
-                student.CoursesReferences.Add(new MongoDBRef(DatabaseConfig.CoursesCollectionName, course.Id));
+                student.CoursesReferences.Add(new MongoDBRef(DatabaseConfig.CoursesCollectionName, new ObjectId(course.Id)));
             }
             BaseRepository.Instance.CoursesCollection.Update(course);
             BaseRepository.Instance.StudentsCollection.Update(student);
