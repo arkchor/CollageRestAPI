@@ -25,7 +25,7 @@ namespace CollageRestAPI.Controllers
         [HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourses")]
         public IHttpActionResult GetCourses([FromUri]CoursesRequestViewModel coursesRequest)
         {
-            System.Diagnostics.Debug.WriteLine(coursesRequest == null ? "### NULL ###" : $"### {coursesRequest.Id} {coursesRequest.CourseName} {coursesRequest.Tutor} ###");
+            //System.Diagnostics.Debug.WriteLine(coursesRequest == null ? "### NULL ###" : $"### {coursesRequest.Id} {coursesRequest.CourseName} {coursesRequest.Tutor} ###");
             return Ok(_filterService.FilterCourses(coursesRequest));
         }
 

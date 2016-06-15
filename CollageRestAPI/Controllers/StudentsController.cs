@@ -87,8 +87,9 @@ namespace CollageRestAPI.Controllers
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
             var grades = new List<GradeModel>();
-            student.GradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));
-
+            student.GradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));           
+            //System.Diagnostics.Debug.WriteLine(grades[0].Value);
+            
             return Ok(grades);
         }
 

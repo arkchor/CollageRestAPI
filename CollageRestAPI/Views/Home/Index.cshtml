@@ -6,6 +6,7 @@
     <table class="table">
         <thead class="table-header">
         <tr class="table-row">
+            <th class="cell">Course name</th>
             <th class="cell">Value</th>
             <th class="cell">Date of issue</th>
             <th class="cell">Actions</th>
@@ -15,6 +16,9 @@
         <tbody data-bind="foreach: grades">
         <tr class="table-row">
             <th class="cell">
+                <input type="text" data-bind="value: CourseName" required />
+            </th>
+            <th class="cell">
                 <input type="number" data-bind="value: Value" required/>
             </th>
             <th class="cell">
@@ -23,8 +27,6 @@
             <th class="cell actions">
                 <div class="action-buttons">
                     <div data-bind="visible: Id() != '' ">
-                        <button data-bind="click: $root.seeCourseGrades">See grades</button>
-                        <button>See students</button>
                         <button data-bind="click: $root.updateCourse">Save</button>
                         <button data-bind="click: $root.deleteCourse">Delete</button>
                     </div>

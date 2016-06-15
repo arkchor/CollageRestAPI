@@ -24,7 +24,7 @@ namespace CollageRestAPI.Models
         public DateTime IssueDateTime { get; set; }       
         [IgnoreDataMember]
         public MongoDBRef StudentReference { get; set; }
-        [IgnoreDataMember]
+        //[IgnoreDataMember]
         public MongoDBRef CourseReference { get; set; }
         //[BsonIgnore]
         public List<Link> Links { get; set; } = new List<Link>();

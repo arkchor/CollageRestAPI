@@ -392,6 +392,21 @@ var ViewModel = function() {
         //console.log(ko.toJSON(ko.mapping.toJS(student)));
     }
 
+//    type: "GET",
+//    url: apiStudents + "/grades?id=" + student.Id(),
+//    contentType: "application/json; charset=utf-8",
+//    dataType: "json",
+//    success: function(data) {
+//        data.forEach(function(grade) {
+//            self.courses()
+//                .forEach(function(course) {
+//                    if (course().Id() === grade.CourseReference.Id) {
+//                        grade.
+//                    }
+//                });
+//        });
+//    }
+//});
     /*=======================================
       =============== GRADES ================
       =======================================*/
@@ -403,6 +418,19 @@ var ViewModel = function() {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
+                console.log(data);
+                data.forEach(function (grade) {
+                    var courses = ko.mapping.toJS(self.courses);
+                    console.log(courses);                   
+                    courses
+                        .forEach(function (course) {
+                            console.log(course.Id);
+                            console.log(grade);
+                            if (course.Id === grade.CourseReference.Id) {
+                                grade.CourseName = course.CourseName;
+                            }
+                        });
+                });
                 var mappedGrades = ko.mapping.fromJS(data, ViewModel);
                 console.log(mappedGrades());
                 self.grades(mappedGrades());
