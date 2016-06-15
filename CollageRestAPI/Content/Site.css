@@ -336,11 +336,19 @@ footer ul {
     border: none;
     text-align: center;
 }
+
 .cell > input:hover {
     /*outline-color: #4478d6;*/
     outline-color: white;
     outline-width: 5px;
     outline-style: auto;
+}
+
+.cell > input.search {
+    background: white;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
 }
 
 .cell > span {

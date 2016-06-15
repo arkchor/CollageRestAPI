@@ -53,12 +53,35 @@ var StudentModel = function () {
     //self.ToCreate = true;
 }
 
+var StudentsRequest = function () {
+    var self = this;
+    var student = new StudentModel();
+}
+
 var CourseModel = function () {
     var self = this;
     self.Id = "";
     self.CourseName = "";
     self.Tutor = "";
 }
+
+var CoursesRequest = function () {
+    var self = this;
+    self.Id = ko.observable("");
+    self.CourseName = ko.observable("");
+    self.Tutor = ko.observable("");
+    self.PageSize = ko.observable("");
+    self.PageNumber = ko.observable("");
+}
+
+//var CoursesRequest = function () {
+//    var self = this;
+//    self.Id = "";
+//    self.CourseName = "";
+//    self.Tutor = "";
+//    self.PageSize = "";
+//    self.PageNumber = "";
+//}
 
 var GradeModel = function () {
     var self = this;
@@ -87,6 +110,15 @@ var ViewModel = function() {
     self.newGradePreparation = ko.observable(false);
 
     self.currentStudentForGradeView = ko.observable(new StudentModel());
+
+    self.coursesRequest = ko.observable(new CoursesRequest());
+    self.query = ko.observable("");
+
+    //self.coursesRequest.subscribe(self.getC);
+
+    self.coursesRequestChanged = function(newValue) {
+        
+    }
 
     //self.getStudents = function() {
     //    $.ajax({
@@ -131,7 +163,7 @@ var ViewModel = function() {
       ============= STUDENTS ================
       =======================================*/
 
-    self.getStudents = function() {
+    self.getStudents = function () {
         $.ajax({
             type: "GET",
             url: apiStudents,
@@ -254,9 +286,19 @@ var ViewModel = function() {
       =======================================*/
 
     self.getCourses = function () {
+        //console.log(self.coursesRequest().Tutor());
+        //var query = "";
+        //if (self.coursesRequest().Tutor() !== "") {
+            //query += "?tutor=" + self.coursesRequest().Tutor();
+        //}
+        var query = "?"
+            + "id=" + self.coursesRequest().Id()
+            + "&courseName=" + self.coursesRequest().CourseName()
+            + "&tutor=" + self.coursesRequest().Tutor();
+
         $.ajax({
             type: "GET",
-            url: apiCourses,
+            url: apiCourses + query,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {              
@@ -268,6 +310,11 @@ var ViewModel = function() {
                 alert(error.status + "<--and--> " + error.statusText);
             }
         });
+    }
+
+    self.getC = function (value) {
+        console.log("### INSIDE ###");
+        self.getCourses();
     }
 
     self.prepareCourse = function () {
@@ -444,6 +491,12 @@ var ViewModel = function() {
 }
 
 var vm = new ViewModel();
+//console.log(vm.query);
+//console.log(vm.coursesRequest().Tutor);
+vm.coursesRequest().Id.subscribe(vm.getC);
+vm.coursesRequest().CourseName.subscribe(vm.getC);
+vm.coursesRequest().Tutor.subscribe(vm.getC);
+vm.query.subscribe(vm.getC);
 vm.getStudents();
 vm.getCourses();
 ko.applyBindings(vm);

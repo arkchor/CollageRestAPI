@@ -14,16 +14,20 @@ namespace CollageRestAPI.Services
     public class FilterService : IFilterService
     {
         public IEnumerable FilterCourses(CoursesRequestViewModel coursesRequest)
-        {      
+        {
+            if (coursesRequest == null || (string.IsNullOrWhiteSpace(coursesRequest.CourseName) && string.IsNullOrWhiteSpace(coursesRequest.Tutor)))
+            {
+                return BaseRepository.Instance.CoursesCollection;
+            }   
             if (!string.IsNullOrWhiteSpace(coursesRequest.Id))
             {
                 return BaseRepository.Instance.CoursesCollection.Where(course => course.Id == coursesRequest.Id);
             }
 
-            if (string.IsNullOrWhiteSpace(coursesRequest.CourseName) && string.IsNullOrWhiteSpace(coursesRequest.Tutor))
-            {
-                return BaseRepository.Instance.CoursesCollection;
-            }
+            //if (string.IsNullOrWhiteSpace(coursesRequest.CourseName) && string.IsNullOrWhiteSpace(coursesRequest.Tutor))
+            //{
+            //    return BaseRepository.Instance.CoursesCollection;
+            //}
 
             if (string.IsNullOrWhiteSpace(coursesRequest.Tutor))
             {
