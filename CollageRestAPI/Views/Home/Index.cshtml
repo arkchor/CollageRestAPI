@@ -60,7 +60,8 @@
 
 <section id="courses" class="table-section">
     <h2>Courses table</h2>
-
+    @*<pre data-bind="text: ko.toJSON($data, null, 2)"></pre>*@
+    @*<pre data-bind="text: ko.toJSON(coursesRequest.Tutor(), null, 2)"></pre>*@
     <table class="table">
         <thead class="table-header">
             <tr class="table-row">
@@ -68,6 +69,19 @@
                 <th class="cell">Tutor name</th>
                 @*<th class="cell">Numeber of students</th>*@
                 <th class="cell">Actions</th>
+            </tr>           
+            <tr class="table-row">
+                <th class="cell"><input class="search" type="search" data-bind="value: coursesRequest().CourseName, valueUpdate: 'keyup'" /></th>
+                <th class="cell"><input class="search" type="search" data-bind="value: coursesRequest().Tutor, valueUpdate: 'keyup'" /></th>
+                @*<th class="cell">Numeber of students</th>*@
+                <th class="cell">
+                    <div style="visibility: hidden"> 
+                        <button>See grades</button>
+                        <button>See students</button>
+                        <button>Save</button>
+                        <button>Delete</button>
+                    </div>                
+                </th>
             </tr>
         </thead>
         <!-- Todo: Generate table body -->

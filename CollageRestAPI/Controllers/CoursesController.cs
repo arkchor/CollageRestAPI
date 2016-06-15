@@ -6,6 +6,9 @@ using CollageRestAPI.Controllers.Interfaces;
 using CollageRestAPI.Hypermedia;
 using CollageRestAPI.Models;
 using CollageRestAPI.Repositories;
+using CollageRestAPI.Services;
+using CollageRestAPI.ViewModels;
+using Microsoft.Ajax.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -14,30 +17,39 @@ namespace CollageRestAPI.Controllers
     //[RoutePrefix("api/courses")]
     public class CoursesController : ApiController, ICourseController
     {
+        private readonly IFilterService _filterService = new FilterService();
+
         /*=======================================
         =========== GET METHODS =================
         =======================================*/
         [HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourses")]
-        public IHttpActionResult GetCourses(string id = null, string courseName = null, string tutor = null)
+        public IHttpActionResult GetCourses([FromUri]CoursesRequestViewModel coursesRequest)
         {
-            if (id != null)
-            {
-                return Ok(BaseRepository.Instance.CoursesCollection.Single(x => x.Id == id));
-            }
-            if (courseName == null && tutor == null)
-            {
-                return Ok(BaseRepository.Instance.CoursesCollection);
-            }
-            if (tutor == null)
-            {
-                return Ok(BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName));
-            }
-            if (courseName == null)
-            {
-                return Ok(BaseRepository.Instance.CoursesCollection.Where(course => course.Tutor == tutor).ToList());
-            }
-            return Ok(BaseRepository.Instance.CoursesCollection.Where(course => course.CourseName == courseName && course.Tutor == tutor).ToList());
+            System.Diagnostics.Debug.WriteLine(coursesRequest == null ? "### NULL ###" : $"### {coursesRequest.Id} {coursesRequest.CourseName} {coursesRequest.Tutor} ###");
+            return Ok(_filterService.FilterCourses(coursesRequest));
         }
+
+        //[HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourses")]
+        //public IHttpActionResult GetCourses(string id = null, string courseName = null, string tutor = null)
+        //{
+        //    if (id != null)
+        //    {
+        //        return Ok(BaseRepository.Instance.CoursesCollection.Single(x => x.Id == id));
+        //    }
+        //    if (courseName == null && tutor == null)
+        //    {
+        //        return Ok(BaseRepository.Instance.CoursesCollection);
+        //    }
+        //    if (tutor == null)
+        //    {
+        //        return Ok(BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName));
+        //    }
+        //    if (courseName == null)
+        //    {
+        //        return Ok(BaseRepository.Instance.CoursesCollection.Where(course => course.Tutor == tutor).ToList());
+        //    }
+        //    return Ok(BaseRepository.Instance.CoursesCollection.Where(course => course.CourseName == courseName && course.Tutor == tutor).ToList());
+        //}
 
         //[HttpGet, Route(WebApiConfig.RoutesTemplates.Courses, Name = "GetCourseById")]
         //public IHttpActionResult GetCourseById([FromUri] ObjectId id)
@@ -127,7 +139,7 @@ namespace CollageRestAPI.Controllers
             BaseRepository.Instance.StudentsCollection.Update(student);
             BaseRepository.Instance.CoursesCollection.Update(course);
 
-            return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, courseName, new ObjectId(gradeToCreate.Id)).Href, "");
+            return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, courseName, gradeToCreate.Id).Href, "");
         }
 
         /*=======================================

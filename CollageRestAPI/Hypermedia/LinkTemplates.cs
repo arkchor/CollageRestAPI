@@ -69,10 +69,10 @@ namespace CollageRestAPI.Hypermedia
         {
             public static Link GetCoursesCollectionLink(UrlHelper urlHelper) => new Link("GetCoursesCollection", urlHelper.Content(WebApiConfig.RoutesTemplates.Courses), "GET");
 
-            public static Link GetCourseByIdLink(UrlHelper urlHelper, ObjectId id)
+            public static Link GetCourseByIdLink(UrlHelper urlHelper, string id)
             {
                 var query = HttpUtility.ParseQueryString(string.Empty);
-                query.Add("id", id.ToString());
+                query.Add("id", id);
                 var url = urlHelper.Content(WebApiConfig.RoutesTemplates.Courses) + "?" + query;
                 return new Link("GetCourseById", url, "GET");
             }
@@ -97,11 +97,11 @@ namespace CollageRestAPI.Hypermedia
                 var url = urlHelper.Content(WebApiConfig.RoutesTemplates.CourseStudents) + "?" + query;
                 return new Link("GetCourseStudents", url, "GET");
             }
-            public static Link GetCourseGradeByIdLink(UrlHelper urlHelper, string name, ObjectId gradeId)
+            public static Link GetCourseGradeByIdLink(UrlHelper urlHelper, string name, string gradeId)
             {
                 var query = HttpUtility.ParseQueryString(string.Empty);
                 query.Add("courseName", name);
-                query.Add("gradeId", gradeId.ToString());
+                query.Add("gradeId", gradeId);
                 var url = urlHelper.Content(WebApiConfig.RoutesTemplates.CourseGrades) + "?" + query;
                 return new Link("GetCourseGradeById", url, "GET");
             }

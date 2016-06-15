@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Web.Http;
 using CollageRestAPI.Models;
+using CollageRestAPI.ViewModels;
 using MongoDB.Bson;
 
 namespace CollageRestAPI.Controllers.Interfaces
@@ -8,7 +9,8 @@ namespace CollageRestAPI.Controllers.Interfaces
     interface ICourseController
     {
         //=== GET METHODS ===//
-        IHttpActionResult GetCourses(string id = null, string courseName = null, string tutor = null);
+        IHttpActionResult GetCourses(CoursesRequestViewModel coursesRequest);
+        //IHttpActionResult GetCourses(string id = null, string courseName = null, string tutor = null);
         //IHttpActionResult GetCourseByName(string courseName);
         //IHttpActionResult GetCourseById(ObjectId id);
         IHttpActionResult GetCourseStudents(string courseName, int id = 0);
