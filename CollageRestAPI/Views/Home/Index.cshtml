@@ -27,11 +27,11 @@
             <th class="cell actions">
                 <div class="action-buttons">
                     <div data-bind="visible: Id() != '' ">
-                        <button data-bind="click: $root.updateCourse">Save</button>
-                        <button data-bind="click: $root.deleteCourse">Delete</button>
+                        <button data-bind="click: $root.updateGrade">Save</button>
+                        <button data-bind="click: $root.deleteGrade">Delete</button>
                     </div>
                     <div data-bind="visible: Id() == '' ">
-                        <button data-bind="click: $root.createCourse">
+                        <button data-bind="click: $root.createGrade">
                             Create
                         </button>
                     </div>
@@ -44,13 +44,14 @@
         <tr class="table-row button-row">
             <th class="cell"></th>
             <th class="cell"></th>
+            <th class="cell"></th>
             @*<th class="cell"></th>*@
 
             <th class="cell">
-                <button data-bind="click: prepareCourse, visible: !newCoursePreparation()">
-                    Add course
+                <button data-bind="click: prepareGrade, visible: !newGradePreparation()">
+                    Add grade
                 </button>
-                <button data-bind="click: cancelPrepareCourse, visible: newCoursePreparation()">
+                <button data-bind="click: cancelPrepareGrade, visible: newGradePreparation()">
                     Cancel adding
                 </button>
             </th>

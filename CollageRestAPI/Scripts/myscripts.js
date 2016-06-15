@@ -88,6 +88,7 @@ var GradeModel = function () {
     self.Id = "";
     self.Value = "";
     self.IssueDateTime = "";
+    self.CourseName = "";
 }
 
 //var StudentModel = function () {
@@ -112,13 +113,6 @@ var ViewModel = function() {
     self.currentStudentForGradeView = ko.observable(new StudentModel());
 
     self.coursesRequest = ko.observable(new CoursesRequest());
-    self.query = ko.observable("");
-
-    //self.coursesRequest.subscribe(self.getC);
-
-    self.coursesRequestChanged = function(newValue) {
-        
-    }
 
     //self.getStudents = function() {
     //    $.ajax({
@@ -312,11 +306,6 @@ var ViewModel = function() {
         });
     }
 
-    self.getC = function (value) {
-        console.log("### INSIDE ###");
-        self.getCourses();
-    }
-
     self.prepareCourse = function () {
         var mappedCourse = ko.mapping.fromJS(new CourseModel(), ViewModel);
         self.courses.push(mappedCourse);
@@ -356,6 +345,8 @@ var ViewModel = function() {
     self.updateCourse = function (course) {
         var confirmationValue = confirm("Czy na pewno chcesz zmienić dane kursu?");
         if (confirmationValue) {
+            console.log(ko.mapping.toJS(course));
+            console.log(ko.toJSON(ko.mapping.toJS(course)));
             $.ajax({
                 type: "PUT",
                 url: apiCourses + "?courseName=" + course.CourseName(),
@@ -412,27 +403,28 @@ var ViewModel = function() {
       =======================================*/
 
     self.getStudentGrades = function (student) {
+        console.log(student);
         $.ajax({
             type: "GET",
             url: apiStudents + "/grades?id=" + student.Id(),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                console.log(data);
+                //console.log(data);
                 data.forEach(function (grade) {
                     var courses = ko.mapping.toJS(self.courses);
-                    console.log(courses);                   
+                    //console.log(courses);                   
                     courses
                         .forEach(function (course) {
-                            console.log(course.Id);
-                            console.log(grade);
+                            //console.log(course.Id);
+                            //console.log(grade);
                             if (course.Id === grade.CourseReference.Id) {
                                 grade.CourseName = course.CourseName;
                             }
                         });
                 });
                 var mappedGrades = ko.mapping.fromJS(data, ViewModel);
-                console.log(mappedGrades());
+                //console.log(mappedGrades());
                 self.grades(mappedGrades());
             },
             error: function (error) {
@@ -447,33 +439,43 @@ var ViewModel = function() {
     }
 
     self.prepareGrade = function () {
-        var mappedCourse = ko.mapping.fromJS(new CourseModel(), ViewModel);
-        self.courses.push(mappedCourse);
-        self.newCoursePreparation(true);
+        var mappedGrade = ko.mapping.fromJS(new GradeModel(), ViewModel);
+        self.grades.push(mappedGrade);
+        self.newGradePreparation(true);
     }
 
     self.cancelPrepareGrade = function () {
-        self.courses.pop();
-        self.newCoursePreparation(false);
+        self.grades.pop();
+        self.newGradePreparation(false);
     }
 
     self.createGrade = function () {
-        if (self.courses().last().CourseName() === "" ||
-            self.courses().last().Tutor() === "") {
-
+        if (self.grades().last().CourseName() === "" ||
+            self.grades().last().Value() === "" ||
+            self.grades().last().IssueDateTime() === "") {
+            console.log(apiCourses + "?id=" + self.currentStudentForGradeView().Id() + "&courseName=" + self.grades().last().CourseName());
             alert("Proszę wypełnić pola!");
         } else {
+            //console.log(apiCourses + "?id=" + self.currentStudentForGradeView().Id() + "&courseName=" + self.grades().last().CourseName());
+            var query = "?id=" +
+                self.currentStudentForGradeView().Id() +
+                "&courseName=" +
+                self.grades().last().CourseName();
+            var gradeToCreate = ko.mapping.toJS(self.grades().last());
+            //console.log(gradeToCreate);
+            //delete gradeToCreate.CourseName;
+            //console.log(gradeToCreate);
             $.ajax({
                 type: "POST",
-                url: apiCourses,
+                url: apiCourses + "/grades" + query,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                data: ko.toJSON(ko.mapping.toJS(self.courses().last())),
+                data: ko.toJSON(gradeToCreate),
                 success: function (data) {
                     //alert("Utworzono studenta!");
                     console.log(data);
-                    self.newCoursePreparation(false);
-                    self.getCourses();
+                    self.newGradePreparation(false);
+                    self.getStudentGrades(self.currentStudentForGradeView());
                 },
                 error: function (error) {
                     alert(error.status + "<--and--> " + error.statusText);
@@ -482,17 +484,33 @@ var ViewModel = function() {
         }
     }
 
-    self.updateGrade = function (course) {
-        var confirmationValue = confirm("Czy na pewno chcesz zmienić dane kursu?");
-        if (confirmationValue) {
+    self.updateGrade = function (grade) {
+        var confirmationValue = confirm("Czy na pewno chcesz zmienić dane oceny?");
+        if (confirmationValue) {           
+            //var gradeToUpdate = ko.mapping.toJS(grade);
+            var gradeToUpdate = grade;
+            //var courseReference = gradeToUpdate.CourseReference;
+            delete gradeToUpdate.CourseName;
+            delete gradeToUpdate.CourseReference;
+            //console.log(grade);
+            //console.log(ko.mapping.toJS(grade));
+            console.log(gradeToUpdate);
+            console.log(ko.toJSON(gradeToUpdate));
+            console.log(grade);
             $.ajax({
                 type: "PUT",
-                url: apiCourses + "?courseName=" + course.CourseName(),
+                url: apiCourses + "/grades",
                 contentType: "application/json; charset=utf-8",
-                data: ko.toJSON(ko.mapping.toJS(course)),
+                data: ko.toJSON(ko.mapping.toJS(gradeToUpdate)),
                 success: function (data) {
-                    self.getCourses();
-                    alert("Dane kursu zostały zaktualizowane!");
+                    //var gradeUpdated = ko.mapping.toJS(grade);
+                    //gradeUpdated.CourseReference = courseReference;
+                    //grade(gradeUpdated);
+                    //var gradeUpdated = grade;
+                    //gradeUpdated.CourseReference = courseReference;
+                    //grade = gradeUpdated;
+                    self.getStudentGrades(self.currentStudentForGradeView());
+                    alert("Dane oceny zostały zaktualizowane!");
                 },
                 error: function (error) {
                     alert(error.status + "<--and--> " + error.statusText);
@@ -501,14 +519,15 @@ var ViewModel = function() {
         }
     }
 
-    self.deleteGrade = function (course) {
-        var confirmationValue = confirm("Czy na pewno chcesz usunąć kurs?");
+    self.deleteGrade = function (grade) {
+        var confirmationValue = confirm("Czy na pewno chcesz usunąć ocenę?");
         if (confirmationValue) {
+            console.log(apiCourses + "/grades" + "?gradeId=" + grade.Id());
             $.ajax({
                 type: "DELETE",
-                url: apiCourses + "?courseName=" + course.CourseName(),
+                url: apiCourses + "/grades" + "?gradeId=" + grade.Id(),
                 success: function (data) {
-                    self.getCourses();
+                    self.getStudentGrades(self.currentStudentForGradeView());
                 },
                 error: function (error) {
                     alert(error.status + "<--and--> " + error.statusText);
@@ -524,135 +543,6 @@ var vm = new ViewModel();
 vm.coursesRequest().Id.subscribe(vm.getC);
 vm.coursesRequest().CourseName.subscribe(vm.getC);
 vm.coursesRequest().Tutor.subscribe(vm.getC);
-vm.query.subscribe(vm.getC);
 vm.getStudents();
 vm.getCourses();
 ko.applyBindings(vm);
-
-var EmpViewModel = function () {
-    //Make the self as 'this' reference
-    var self = this;
-    //Declare observable which will be bind with UI 
-    self.EmpNo = ko.observable("0");
-    self.EmpName = ko.observable("");
-    self.Salary = ko.observable("");
-    self.DeptName = ko.observable("");
-    self.Designation = ko.observable("");
-
-    //The Object which stored data entered in the observables
-    var EmpData = {
-        EmpNo: self.EmpNo,
-        EmpName: self.EmpName,
-        Salary: self.Salary,
-        DeptName: self.DeptName,
-        Designation: self.Designation
-    };
-
-    //Declare an ObservableArray for Storing the JSON Response
-    self.Employees = ko.observableArray([]);
-
-    GetEmployees(); //Call the Function which gets all records using ajax call
-
-    //Function to perform POST (insert Employee) operation
-    self.save = function () {
-        //Ajax call to Insert the Employee
-        $.ajax({
-            type: "POST",
-            url: "http://localhost:50457/api/EmployeeInfoAPI",
-            data: ko.toJSON(EmpData), //Convert the Observable Data into JSON
-            contentType: "application/json",
-            success: function (data) {
-                alert("Record Added Successfully");
-                self.EmpNo(data.EmpNo);
-                alert("The New Employee Id :" + self.EmpNo());
-                GetEmployees();
-            },
-            error: function () {
-                alert("Failed");
-            }
-        });
-        //Ends Here
-    };
-
-    self.update = function () {
-        var url = "http://localhost:50457/api/EmployeeInfoAPI/" + self.EmpNo();
-        alert(url);
-        $.ajax({
-            type: "PUT",
-            url: url,
-            data: ko.toJSON(EmpData),
-            contentType: "application/json",
-            success: function (data) {
-                alert("Record Updated Successfully");
-                GetEmployees();
-            },
-            error: function (error) {
-                alert(error.status + "<!----!>" + error.statusText);
-            }
-        });
-    };
-
-    //Function to perform DELETE Operation
-    self.deleterec = function (employee) {
-        $.ajax({
-            type: "DELETE",
-            url: "http://localhost:50457/api/EmployeeInfoAPI/" + employee.EmpNo,
-            success: function (data) {
-                alert("Record Deleted Successfully");
-                GetEmployees();//Refresh the Table
-            },
-            error: function (error) {
-                alert(error.status + "<--and--> " + error.statusText);
-            }
-        });
-        // alert("Clicked" + employee.EmpNo)
-    };
-
-    //Function to Read All Employees
-    function GetEmployees() {
-        //Ajax Call Get All Employee Records
-        $.ajax({
-            type: "GET",
-            url: "http://localhost:50457/api/EmployeeInfoAPI",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                self.Employees(data); //Put the response in ObservableArray
-            },
-            error: function (error) {
-                alert(error.status + "<--and--> " + error.statusText);
-            }
-        });
-        //Ends Here
-    }
-
-    //Function to Display record to be updated. This will be
-
-    //executed when record is selected from the table
-    self.getselectedemployee = function (employee) {
-        self.EmpNo(employee.EmpNo),
-        self.EmpName(employee.EmpName),
-        self.Salary(employee.Salary),
-        self.DeptName(employee.DeptName),
-        self.Designation(employee.Designation)
-    };
-
-
-};
-//ko.applyBindings(new EmpViewModel());
-
-//$(function() {
-//    $.ajax({
-//        type: "GET",
-//        url: apiStudents,
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "json",
-//        success: function (data) {
-//            console.log(data); //Put the response in ObservableArray
-//        },
-//        error: function (error) {
-//            alert(error.status + "<--and--> " + error.statusText);
-//        }
-//    });
-//    ViewModel.getStudents();
-//});

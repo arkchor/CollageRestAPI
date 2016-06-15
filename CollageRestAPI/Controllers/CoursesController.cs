@@ -11,6 +11,7 @@ using CollageRestAPI.ViewModels;
 using Microsoft.Ajax.Utilities;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using WebGrease.Css.Extensions;
 
 namespace CollageRestAPI.Controllers
 {
@@ -139,25 +140,78 @@ namespace CollageRestAPI.Controllers
             BaseRepository.Instance.StudentsCollection.Update(student);
             BaseRepository.Instance.CoursesCollection.Update(course);
 
-            return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, courseName, gradeToCreate.Id).Href, "");
+            return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, course.CourseName, gradeToCreate.Id).Href, "");
         }
+
+        //[HttpPost, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "CreateGradeForStudent")]
+        //public IHttpActionResult CreateGradeForStudentByCourseName(int id, string courseName, [FromBody] GradeModel gradeToCreate)
+        //{
+        //    var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+        //    var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+        //    gradeToCreate.CourseReference = new MongoDBRef(DatabaseConfig.CoursesCollectionName, new ObjectId(course.Id));
+        //    gradeToCreate.StudentReference = new MongoDBRef(DatabaseConfig.StudentsCollectionName, student.Id);
+        //    BaseRepository.Instance.GradesCollection.Add(gradeToCreate);
+        //    gradeToCreate.Links = LinkManager.SingleGradeLinks(Url, new ObjectId(gradeToCreate.Id));
+        //    BaseRepository.Instance.GradesCollection.Update(gradeToCreate);
+        //    course.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, new ObjectId(gradeToCreate.Id)));
+        //    student.GradesReferences.Add(new MongoDBRef(DatabaseConfig.GradesCollectionName, new ObjectId(gradeToCreate.Id)));
+        //    BaseRepository.Instance.StudentsCollection.Update(student);
+        //    BaseRepository.Instance.CoursesCollection.Update(course);
+
+        //    return Created(LinkTemplates.Courses.GetCourseGradeByIdLink(Url, courseName, gradeToCreate.Id).Href, "");
+        //}
 
         /*=======================================
         =========== PUT METHODS =================
         =======================================*/
         [HttpPut, Route(WebApiConfig.RoutesTemplates.Courses, Name = "UpdateCourseByName")]
-        public IHttpActionResult UpdateCourse(string courseName, [FromBody]CourseModel courseToUpdate)
+        public IHttpActionResult UpdateCourse([FromBody]CourseModel courseToUpdate)
         {
+            //System.Diagnostics.Debug.WriteLine(courseToUpdate.GradesReferences.Count);
+            //System.Diagnostics.Debug.WriteLine(courseToUpdate.StudentsReferences.Count);
+            var courseToUpdateFromDb =
+                BaseRepository.Instance.CoursesCollection.Single(course => course.Id == courseToUpdate.Id);
+
+            courseToUpdate.GradesReferences = courseToUpdateFromDb.GradesReferences;
+            courseToUpdate.StudentsReferences = courseToUpdateFromDb.StudentsReferences;
+
             courseToUpdate.Links = LinkManager.SingleCourseLinks(Url, courseToUpdate.CourseName);
             BaseRepository.Instance.CoursesCollection.Update(courseToUpdate);
 
             return Ok();
         }
+
+        //public IHttpActionResult UpdateCourse(string courseName, [FromBody]CourseModel courseToUpdate)
+        //{
+        //    courseToUpdate.Links = LinkManager.SingleCourseLinks(Url, courseToUpdate.CourseName);
+        //    BaseRepository.Instance.CoursesCollection.Update(courseToUpdate);
+
+        //    return Ok();
+        //}
+
         [HttpPut, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "UpdateGradeForStudent")] //TODO
-        public IHttpActionResult UpdateGradeForStudent(int id, [FromBody]GradeModel gradeToUpdate)
+        public IHttpActionResult UpdateGradeForStudent([FromBody]GradeModel gradeToUpdate)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine(gradeToUpdate.ToString());
+            System.Diagnostics.Debug.WriteLine(gradeToUpdate.Id);
+            System.Diagnostics.Debug.WriteLine(gradeToUpdate.Id.GetType());
+            System.Diagnostics.Debug.WriteLine(gradeToUpdate.Value);
+            System.Diagnostics.Debug.WriteLine(gradeToUpdate.IssueDateTime);
+            System.Diagnostics.Debug.WriteLine(gradeToUpdate.CourseReference);
+            System.Diagnostics.Debug.WriteLine(gradeToUpdate.StudentReference);
+
+            var gradeToUpdateFromDb =
+                BaseRepository.Instance.GradesCollection.Single(grade => grade.Id == gradeToUpdate.Id);
+
+            gradeToUpdate.CourseReference = gradeToUpdateFromDb.CourseReference;
+            gradeToUpdate.StudentReference = gradeToUpdateFromDb.StudentReference;
+
+            //BaseRepository.Instance.GradesCollection.U
+            BaseRepository.Instance.GradesCollection.Update(gradeToUpdate);
+
+            return Ok();
         }
+
         [HttpPut, Route(WebApiConfig.RoutesTemplates.CourseStudents, Name = "RegisterStudentForCourse")]//TODO
         public IHttpActionResult RegisterStudentForCourse(int id, string courseName, bool unregister = false)
         {
@@ -189,16 +243,68 @@ namespace CollageRestAPI.Controllers
         =========== DELETE METHODS ==============
         =======================================*/
         [HttpDelete, Route(WebApiConfig.RoutesTemplates.Courses, Name = "DeleteCourseByName")] //TODO
-        public IHttpActionResult DeleteCourse(string courseName)
+        public IHttpActionResult DeleteCourse(string courseId)
         {
-            BaseRepository.Instance.CoursesCollection.Delete(course => course.CourseName == courseName);
+            var courseObjectId = new ObjectId(courseId);
+            //BaseRepository.Instance.GradesCollection.ForEach(grade => grade.CourseReference.RemoveAll(reference => reference.Id.AsObjectId == gradeObjectId));
+            //BaseRepository.Instance.StudentsCollection.ForEach(student => student.GradesReferences.RemoveAll(reference => reference.Id.AsObjectId == gradeObjectId));
+            BaseRepository.Instance.CoursesCollection.Delete(courseObjectId);
 
             return Ok();
         }
-        [HttpDelete, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "DeleteGradeForStudent")] //TODO
-        public IHttpActionResult DeleteGradeForStudent(int id, DateTime dateOfIssue)
+        [HttpDelete, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "DeleteGradeForStudentByDateOfIssue")] //TODO
+        public IHttpActionResult DeleteGradeForStudentByDateOfIssue(int id, DateTime dateOfIssue)
         {
             throw new NotImplementedException();
+        }
+        [HttpDelete, Route(WebApiConfig.RoutesTemplates.CourseGrades, Name = "DeleteGradeForStudent")]
+        public IHttpActionResult DeleteGradeForStudent(string gradeId)
+        {
+            var gradeObjectId = new ObjectId(gradeId);
+            //BaseRepository.Instance.CoursesCollection.ForEach(course => course.GradesReferences.ForEach(reference =>
+            //{
+            //    System.Diagnostics.Debug.WriteLine(reference.Id.AsObjectId);
+            //    System.Diagnostics.Debug.WriteLine(gradeObjectId);
+            //    System.Diagnostics.Debug.WriteLine(reference.Id.AsObjectId == gradeObjectId);
+
+            //}));
+
+            //BaseRepository.Instance.CoursesCollection.ForEach(course =>
+            //{
+            //    for (int i = course.GradesReferences.Count - 1; i >= 0; i--)
+            //    {
+            //        if (course.GradesReferences[i].Id.AsObjectId == gradeObjectId)
+            //        {
+            //            course.GradesReferences.RemoveAt(i);
+            //        }
+            //    }
+            //});
+
+            //BaseRepository.Instance.StudentsCollection.ForEach(student =>
+            //{
+            //    for (int i = student.GradesReferences.Count - 1; i >= 0; i--)
+            //    {
+            //        if (student.GradesReferences[i].Id.AsObjectId == gradeObjectId)
+            //        {
+            //            student.GradesReferences.RemoveAt(i);
+            //        }
+            //    }
+            //});
+
+            BaseRepository.Instance.CoursesCollection.ForEach(course =>
+            {
+                System.Diagnostics.Debug.WriteLine(course.Id.GetType());
+                course.GradesReferences.RemoveAll(reference => reference.Id.AsObjectId == gradeObjectId);
+                BaseRepository.Instance.CoursesCollection.Update(course);
+            });
+            BaseRepository.Instance.StudentsCollection.ForEach(student =>
+            {
+                student.GradesReferences.RemoveAll(reference => reference.Id.AsObjectId == gradeObjectId);
+                BaseRepository.Instance.StudentsCollection.Update(student);
+            });   
+            BaseRepository.Instance.GradesCollection.Delete(gradeObjectId);
+
+            return Ok();
         }
     }
 }

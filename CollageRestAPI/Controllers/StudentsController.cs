@@ -184,6 +184,13 @@ namespace CollageRestAPI.Controllers
         {
             //var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
             //System.Diagnostics.Debug.WriteLine($"============ {studentToUpdate.Id} =============");
+
+            var studentToUpdateFromDb =
+                BaseRepository.Instance.StudentsCollection.Single(student => student.Id == studentToUpdate.Id);
+
+            studentToUpdate.CoursesReferences = studentToUpdateFromDb.CoursesReferences;
+            studentToUpdate.GradesReferences = studentToUpdateFromDb.GradesReferences;
+
             studentToUpdate.Links = LinkManager.SingleStudentLinks(Url, id);
             if (studentToUpdate.Id == 0)
             {

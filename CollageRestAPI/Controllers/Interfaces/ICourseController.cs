@@ -21,13 +21,16 @@ namespace CollageRestAPI.Controllers.Interfaces
         IHttpActionResult CreateGradeForStudent(int id, string courseName, GradeModel gradeToCreate);
 
         //=== PUT METHODS ===//
-        IHttpActionResult UpdateCourse(string courseName, CourseModel courseToUpdate);
-        IHttpActionResult UpdateGradeForStudent(int id, GradeModel gradeToUpdate);
+        IHttpActionResult UpdateCourse(CourseModel courseToUpdate);
+        //IHttpActionResult UpdateCourse(string courseName, CourseModel courseToUpdate);
+        IHttpActionResult UpdateGradeForStudent(GradeModel gradeToUpdate);
+        //IHttpActionResult UpdateGradeForStudent(int id, GradeModel gradeToUpdate);
         IHttpActionResult RegisterStudentForCourse(int id, string courseName, bool unregister = false);
         //IHttpActionResult UnregisterStudentFromCourse(int id, string courseName);
 
         //=== DELETE METHODS ===//
-        IHttpActionResult DeleteCourse(string courseName);
-        IHttpActionResult DeleteGradeForStudent(int id, DateTime dateOfIssue);
+        IHttpActionResult DeleteCourse(string courseId);
+        IHttpActionResult DeleteGradeForStudentByDateOfIssue(int id, DateTime dateOfIssue);
+        IHttpActionResult DeleteGradeForStudent(string gradeId);
     }
 }
