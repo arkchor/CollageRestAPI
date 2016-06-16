@@ -79,8 +79,8 @@
                 @*<th class="cell">Numeber of students</th>*@
                 <th class="cell">
                     <div style="visibility: hidden"> 
-                        <button>See grades</button>
-                        <button>See students</button>
+                        @*<button>See grades</button>
+                        <button>See students</button>*@
                         <button>Save</button>
                         <button>Delete</button>
                     </div>                
@@ -102,8 +102,8 @@
                 <th class="cell actions">
                     <div class="action-buttons">
                         <div data-bind="visible: Id() != '' ">
-                            <button data-bind="click: $root.seeCourseGrades">See grades</button>
-                            <button>See students</button>
+                            @*<button data-bind="click: $root.seeCourseGrades">See grades</button>
+                            <button>See students</button>*@
                             <button data-bind="click: $root.updateCourse">Save</button>
                             <button data-bind="click: $root.deleteCourse">Delete</button>
                         </div>
@@ -209,6 +209,20 @@
                 <th class="cell">Birth date</th>
                 <th class="cell">Actions</th>
             </tr>
+            <tr class="table-row">
+                <th class="cell"><input class="search" type="search" data-bind="value: studentsRequest().Id, valueUpdate: 'keyup'" /></th>
+                <th class="cell"><input class="search" type="search" data-bind="value: studentsRequest().FirstName, valueUpdate: 'keyup'" /></th>
+                <th class="cell"><input class="search" type="search" data-bind="value: studentsRequest().LastName, valueUpdate: 'keyup'" /></th>
+                <th class="cell">@*<input class="search" type="search" data-bind="value: studentsRequest().BornDate, valueUpdate: 'keyup'" />*@</th>
+                <th class="cell">
+                    <div style="visibility: hidden">
+                        <button>See grades</button>
+                        @*<button>See courses</button>*@
+                        <button>Save</button>
+                        <button>Delete</button>
+                    </div>
+                </th>
+            </tr>
         </thead>
         <!-- Todo: Generate table body -->
         <tbody data-bind="foreach: students">
@@ -229,7 +243,7 @@
                     <div class="action-buttons">
                         <div data-bind="visible: Id() != '' ">
                             <a href="#grades" data-bind="click: $root.getStudentGrades">See grades</a>
-                            <button>See courses</button>
+                            @*<button>See courses</button>*@
                             <button data-bind="click: $root.updateStudent">Save</button>
                             <button data-bind="click: $root.deleteStudent">Delete</button>
                         </div>

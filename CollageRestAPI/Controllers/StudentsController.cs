@@ -7,55 +7,77 @@ using CollageRestAPI.Hypermedia;
 using CollageRestAPI.Models;
 using CollageRestAPI.Providers;
 using CollageRestAPI.Repositories;
+using CollageRestAPI.Services;
+using CollageRestAPI.ViewModels;
 
 namespace CollageRestAPI.Controllers
 {
     //[RoutePrefix("api/students")]
     public class StudentsController : ApiController, IStudentsController
     {
+        private readonly IFilterService _filterService = new FilterService();
+
         /*=======================================
         =========== GET METHODS =================
         =======================================*/
         [HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentsCollection")]
-        public IHttpActionResult GetStudents(int id = 0, string firstName = null, string lastName = null)
+        public IHttpActionResult GetStudents([FromUri]StudentsRequestViewModel studentsRequest)
         {
-            if (id != 0)
+            if (studentsRequest != null)
             {
-                return Ok(BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id));
+                System.Diagnostics.Debug.WriteLine(studentsRequest.Id);              
+                System.Diagnostics.Debug.WriteLine(studentsRequest.FirstName);              
+                System.Diagnostics.Debug.WriteLine(studentsRequest.LastName);              
+                System.Diagnostics.Debug.WriteLine(studentsRequest.BornDate);              
             }
-            if (firstName == null && lastName == null)
+            else
             {
-                return Ok(BaseRepository.Instance.StudentsCollection);
+                System.Diagnostics.Debug.WriteLine("### NULL ###");
             }
-            if (firstName == null)
-            {
-                return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.LastName == lastName).ToList());
-            }
-            if (lastName == null)
-            {
-                return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName).ToList());
-            }
-            return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName && student.LastName == lastName).ToList());            
+
+            return Ok(_filterService.FilterStudents(studentsRequest));
         }
 
-        [HttpGet, Route(WebApiConfig.RoutesTemplates.Students)]
-        public IHttpActionResult GetStudents(DateTime bornDate, int condition = 0)
-        {
-            var students = BaseRepository.Instance.StudentsCollection.ToList();
-            return Ok(students.Where(student => student.BornDate.Date.CompareTo(bornDate.Date) == condition));
-            //switch (condition)
-            //{
-            //    case ComparingUtils.GreaterThan:
-            //        return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.BornDate.CompareTo(bornDate) == condition))
-            //        break;
-            //    case ComparingUtils.EqualTo:
+        //[HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentsCollection")]
+        //public IHttpActionResult GetStudents(int id = 0, string firstName = null, string lastName = null)
+        //{
+        //    if (id != 0)
+        //    {
+        //        return Ok(BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id));
+        //    }
+        //    if (firstName == null && lastName == null)
+        //    {
+        //        return Ok(BaseRepository.Instance.StudentsCollection);
+        //    }
+        //    if (firstName == null)
+        //    {
+        //        return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.LastName == lastName).ToList());
+        //    }
+        //    if (lastName == null)
+        //    {
+        //        return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName).ToList());
+        //    }
+        //    return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.FirstName == firstName && student.LastName == lastName).ToList());            
+        //}
 
-            //        break;
-            //    case ComparingUtils.LessThan:
+        //[HttpGet, Route(WebApiConfig.RoutesTemplates.Students)]
+        //public IHttpActionResult GetStudents(DateTime bornDate, int condition = 0)
+        //{
+        //    var students = BaseRepository.Instance.StudentsCollection.ToList();
+        //    return Ok(students.Where(student => student.BornDate.Date.CompareTo(bornDate.Date) == condition));
+        //    //switch (condition)
+        //    //{
+        //    //    case ComparingUtils.GreaterThan:
+        //    //        return Ok(BaseRepository.Instance.StudentsCollection.Where(student => student.BornDate.CompareTo(bornDate) == condition))
+        //    //        break;
+        //    //    case ComparingUtils.EqualTo:
 
-            //        break;
-            //}
-        }
+        //    //        break;
+        //    //    case ComparingUtils.LessThan:
+
+        //    //        break;
+        //    //}
+        //}
 
         //[HttpGet, Route(WebApiConfig.RoutesTemplates.Students, Name = "GetStudentById")]
         //public IHttpActionResult GetStudentById(int id)

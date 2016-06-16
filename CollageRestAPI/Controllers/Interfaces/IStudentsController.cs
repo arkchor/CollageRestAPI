@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Web.Http;
 using CollageRestAPI.Models;
+using CollageRestAPI.ViewModels;
 
 namespace CollageRestAPI.Controllers.Interfaces
 {
     interface IStudentsController
     {
         //=== GET METHODS ===//
-        IHttpActionResult GetStudents(int id = 0, string firstName = null, string lastName = null);
-        IHttpActionResult GetStudents(DateTime bornDate, int condition = 0);
+        IHttpActionResult GetStudents(StudentsRequestViewModel studentsRequest);
+        //IHttpActionResult GetStudents(int id = 0, string firstName = null, string lastName = null);
+        //IHttpActionResult GetStudents(DateTime bornDate, int condition = 0);
         //IHttpActionResult GetStudentById(int id);
         //IHttpActionResult GetStudentsByName(string firstName, string lastName);
         //IHttpActionResult GetStudentsByFirstName(string firstName);

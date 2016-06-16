@@ -55,7 +55,12 @@ var StudentModel = function () {
 
 var StudentsRequest = function () {
     var self = this;
-    var student = new StudentModel();
+    self.Id = ko.observable("");
+    self.FirstName = ko.observable("");
+    self.LastName = ko.observable("");
+    self.BornDate = ko.observable("");
+    self.PageSize = ko.observable("");
+    self.PageNumber = ko.observable("");
 }
 
 var CourseModel = function () {
@@ -113,6 +118,7 @@ var ViewModel = function() {
     self.currentStudentForGradeView = ko.observable(new StudentModel());
 
     self.coursesRequest = ko.observable(new CoursesRequest());
+    self.studentsRequest = ko.observable(new StudentsRequest());
 
     //self.getStudents = function() {
     //    $.ajax({
@@ -158,9 +164,18 @@ var ViewModel = function() {
       =======================================*/
 
     self.getStudents = function () {
+
+        var query = "?"
+            + "id=" + self.studentsRequest().Id()
+            + "&firstName=" + self.studentsRequest().FirstName()
+            + "&lastName=" + self.studentsRequest().LastName()
+            + "&bornDate=" + self.studentsRequest().BornDate();
+
+        console.log(query);
+
         $.ajax({
             type: "GET",
-            url: apiStudents,
+            url: apiStudents + query,
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(data) {
@@ -540,9 +555,16 @@ var ViewModel = function() {
 var vm = new ViewModel();
 //console.log(vm.query);
 //console.log(vm.coursesRequest().Tutor);
-vm.coursesRequest().Id.subscribe(vm.getC);
-vm.coursesRequest().CourseName.subscribe(vm.getC);
-vm.coursesRequest().Tutor.subscribe(vm.getC);
+
+vm.coursesRequest().Id.subscribe(vm.getCourses);
+vm.coursesRequest().CourseName.subscribe(vm.getCourses);
+vm.coursesRequest().Tutor.subscribe(vm.getCourses);
+
+vm.studentsRequest().Id.subscribe(vm.getStudents);
+vm.studentsRequest().FirstName.subscribe(vm.getStudents);
+vm.studentsRequest().LastName.subscribe(vm.getStudents);
+vm.studentsRequest().BornDate.subscribe(vm.getStudents);
+
 vm.getStudents();
 vm.getCourses();
 ko.applyBindings(vm);
