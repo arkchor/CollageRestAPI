@@ -5,12 +5,25 @@
 
     <table class="table">
         <thead class="table-header">
-        <tr class="table-row">
-            <th class="cell">Course name</th>
-            <th class="cell">Value</th>
-            <th class="cell">Date of issue</th>
-            <th class="cell">Actions</th>
-        </tr>
+            <tr class="table-row">
+                <th class="cell">Course name</th>
+                <th class="cell">Value</th>
+                <th class="cell">Date of issue</th>
+                <th class="cell">Actions</th>
+            </tr>
+            <tr class="table-row">
+                <th class="cell"><input class="search" type="search" data-bind="value: CourseName, valueUpdate: 'keyup'" /></th>
+                <th class="cell"><input class="search" type="search" data-bind="value: GradeValue, valueUpdate: 'keyup'" /></th>
+                <th class="cell">@*Numeber of students*@</th>
+                <th class="cell">
+                    <div style="visibility: hidden">
+                        @*<button>See grades</button>
+                    <button>See students</button>*@
+                        <button>Save</button>
+                        <button>Delete</button>
+                    </div>
+                </th>
+            </tr>
         </thead>
         <!-- Todo: Generate table body -->
         <tbody data-bind="foreach: grades">

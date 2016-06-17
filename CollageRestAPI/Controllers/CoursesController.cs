@@ -248,6 +248,32 @@ namespace CollageRestAPI.Controllers
             var courseObjectId = new ObjectId(courseId);
             //BaseRepository.Instance.GradesCollection.ForEach(grade => grade.CourseReference.RemoveAll(reference => reference.Id.AsObjectId == gradeObjectId));
             //BaseRepository.Instance.StudentsCollection.ForEach(student => student.GradesReferences.RemoveAll(reference => reference.Id.AsObjectId == gradeObjectId));
+            //BaseRepository.Instance.GradesCollection.ForEach(grade =>
+            //{
+            //    if (grade.CourseReference.Id.AsObjectId == courseObjectId)
+            //    {
+            //        BaseRepository.Instance.GradesCollection.Delete(new ObjectId(grade.Id));
+            //    }              
+            //} );
+
+            var gradesIds = new List<ObjectId>();
+
+            BaseRepository.Instance.GradesCollection.ForEach(grade =>
+            {
+                if (grade.CourseReference.Id.AsObjectId == courseObjectId)
+                {
+                    gradesIds.Add(new ObjectId(grade.Id));
+                }
+            });
+
+            BaseRepository.Instance.StudentsCollection.ForEach(student =>
+            {
+                student.GradesReferences.RemoveAll(reference => gradesIds.Contains(reference.Id.AsObjectId));
+                BaseRepository.Instance.StudentsCollection.Update(student);
+            });
+
+            BaseRepository.Instance.GradesCollection.Delete(grade => grade.CourseReference.Id.AsObjectId == courseObjectId);         
+
             BaseRepository.Instance.CoursesCollection.Delete(courseObjectId);
 
             return Ok();

@@ -79,6 +79,14 @@ var CoursesRequest = function () {
     self.PageNumber = ko.observable("");
 }
 
+var GradesRequest = function () {
+    var self = this;
+    self.Id = ko.observable("");
+    self.Value = ko.observable("");
+    self.IssueDateTime = ko.observable("");
+    self.CourseName = ko.observable("");
+}
+
 //var CoursesRequest = function () {
 //    var self = this;
 //    self.Id = "";
@@ -119,6 +127,9 @@ var ViewModel = function() {
 
     self.coursesRequest = ko.observable(new CoursesRequest());
     self.studentsRequest = ko.observable(new StudentsRequest());
+
+    self.CourseName = ko.observable("");
+    self.GradeValue = ko.observable("");
 
     //self.getStudents = function() {
     //    $.ajax({
@@ -383,14 +394,14 @@ var ViewModel = function() {
         if (confirmationValue) {
             $.ajax({
                 type: "DELETE",
-                url: apiCourses + "?courseName=" + course.CourseName(),
+                url: apiCourses + "?courseId=" + course.Id(),
                 success: function (data) {
                     self.getCourses();
                 },
                 error: function (error) {
                     alert(error.status + "<--and--> " + error.statusText);
                 }
-            });
+            });          
         }
     }
 
@@ -419,9 +430,21 @@ var ViewModel = function() {
 
     self.getStudentGrades = function (student) {
         console.log(student);
+        //var gradeValue = isNaN(self.GradeValue()) ? "0" : self.GradeValue();
+        //var gradeValue = Number.isInteger(self.GradeValue()) ? 0 : self.GradeValue();
+        var gradeValue;
+        if (self.GradeValue() === "") {
+            gradeValue = 0;
+        } else {
+            gradeValue = self.GradeValue();
+        }
+        console.log(gradeValue);
+        
         $.ajax({
             type: "GET",
-            url: apiStudents + "/grades?id=" + student.Id(),
+            url: apiStudents + "/grades?id=" + student.Id()
+                + "&courseName=" + self.CourseName()
+                + "&gradeValue=" + gradeValue,//self.GradeValue(),//(parseInt(self.GradeValue()) == NaN ? "" : parseInt(self.GradeValue())),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
@@ -451,6 +474,10 @@ var ViewModel = function() {
         //console.log(self.currentStudentForGradeView.FirstName());
 
         return true;
+    }
+
+    self.getStudentGradesFiltered = function() {
+        self.getStudentGrades(self.currentStudentForGradeView());
     }
 
     self.prepareGrade = function () {
@@ -564,6 +591,9 @@ vm.studentsRequest().Id.subscribe(vm.getStudents);
 vm.studentsRequest().FirstName.subscribe(vm.getStudents);
 vm.studentsRequest().LastName.subscribe(vm.getStudents);
 vm.studentsRequest().BornDate.subscribe(vm.getStudents);
+
+vm.CourseName.subscribe(vm.getStudentGradesFiltered);
+vm.GradeValue.subscribe(vm.getStudentGradesFiltered);
 
 vm.getStudents();
 vm.getCourses();

@@ -15,9 +15,10 @@ namespace CollageRestAPI.Controllers.Interfaces
         //IHttpActionResult GetStudentsByName(string firstName, string lastName);
         //IHttpActionResult GetStudentsByFirstName(string firstName);
         //IHttpActionResult GetStudentsByLastName(string lastName);
-        IHttpActionResult GetStudentGrades(int id);
-        IHttpActionResult GetStudentGradesByCourse(int id, string courseName);
-        IHttpActionResult GetStudentGradesWithValueFilter(int id, double value, int condition = 0);
+        IHttpActionResult GetStudentGrades(int id, string courseName, int gradeValue);
+        //IHttpActionResult GetStudentGrades(int id);
+        //IHttpActionResult GetStudentGradesByCourse(int id, string courseName);
+        //IHttpActionResult GetStudentGradesWithValueFilter(int id, double value, int condition = 0);
         //IHttpActionResult GetStudentGradeByIssueDate(int id, DateTime issueDate);
         IHttpActionResult GetStudentCourses(int id);
 

@@ -105,67 +105,95 @@ namespace CollageRestAPI.Controllers
         //}
 
         [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGrades")]
-        public IHttpActionResult GetStudentGrades(int id)
+        public IHttpActionResult GetStudentGrades(int id, string courseName, int gradeValue)
         {
             var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
             var grades = new List<GradeModel>();
-            student.GradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));           
+
+            student.GradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));
             //System.Diagnostics.Debug.WriteLine(grades[0].Value);
-            
-            return Ok(grades);
-        }
 
-        [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGradesByCourse")]
-        public IHttpActionResult GetStudentGradesByCourse(int id, string courseName)
-        {
-            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
-            var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
-            var gradesReferences =
-                student.GradesReferences.Where(gradeReference => course.GradesReferences.Contains(gradeReference)).ToList();
-            //var gradess = student.Grades.Where(grade => course.Grades.Contains(grade)).ToList();
-            var grades = new List<GradeModel>();
-            gradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));
-
-            return Ok(grades);
-        }
-
-        [HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGradesWithValueFilter")]
-        public IHttpActionResult GetStudentGradesWithValueFilter(int id, double value, int condition = 0)
-        {
-            var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
-            var grades = new List<GradeModel>();
-            student.GradesReferences.ForEach(gradeReference =>
+            if (!string.IsNullOrWhiteSpace(courseName))
             {
-                var grade = BaseRepository.Instance.Fetch<GradeModel>(gradeReference);
-                if (grade.Value.CompareTo(value) == condition)
+                grades.RemoveAll(grade =>
                 {
-                    grades.Add(grade);
-                }
-                //switch (condition)
-                //{
-                //    case ComparingUtils.GreaterThan:
-                //        if (grade.Value > value)
-                //        {
-                //            grades.Add(grade);
-                //        }
-                //        break;
-                //    case ComparingUtils.EqualTo:
-                //        if (grade.Value == value)
-                //        {
-                //            grades.Add(grade);
-                //        }
-                //        break;
-                //    case ComparingUtils.LessThan:
-                //        if (grade.Value < value)
-                //        {
-                //            grades.Add(grade);
-                //        }
-                //        break;
-                //}
-            });
+                    var course = BaseRepository.Instance.Fetch<CourseModel>(grade.CourseReference);
+
+                    return !course.CourseName.ToLower().Contains(courseName.ToLower());
+
+                });
+            }
+
+            if (gradeValue != 0)
+            {
+                grades.RemoveAll(grade => grade.Value != gradeValue);
+            }            
 
             return Ok(grades);
         }
+
+        //[HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGrades")]
+        //public IHttpActionResult GetStudentGrades(int id)
+        //{
+        //    var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+        //    var grades = new List<GradeModel>();
+        //    student.GradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));           
+        //    //System.Diagnostics.Debug.WriteLine(grades[0].Value);
+            
+        //    return Ok(grades);
+        //}
+
+        //[HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGradesByCourse")]
+        //public IHttpActionResult GetStudentGradesByCourse(int id, string courseName)
+        //{
+        //    var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+        //    var course = BaseRepository.Instance.CoursesCollection.Single(x => x.CourseName == courseName);
+        //    var gradesReferences =
+        //        student.GradesReferences.Where(gradeReference => course.GradesReferences.Contains(gradeReference)).ToList();
+        //    //var gradess = student.Grades.Where(grade => course.Grades.Contains(grade)).ToList();
+        //    var grades = new List<GradeModel>();
+        //    gradesReferences.ForEach(gradeReference => grades.Add(BaseRepository.Instance.Fetch<GradeModel>(gradeReference)));
+
+        //    return Ok(grades);
+        //}
+
+        //[HttpGet, Route(WebApiConfig.RoutesTemplates.StudentGrades, Name = "GetStudentGradesWithValueFilter")]
+        //public IHttpActionResult GetStudentGradesWithValueFilter(int id, double value, int condition = 0)
+        //{
+        //    var student = BaseRepository.Instance.StudentsCollection.Single(x => x.Id == id);
+        //    var grades = new List<GradeModel>();
+        //    student.GradesReferences.ForEach(gradeReference =>
+        //    {
+        //        var grade = BaseRepository.Instance.Fetch<GradeModel>(gradeReference);
+        //        if (grade.Value.CompareTo(value) == condition)
+        //        {
+        //            grades.Add(grade);
+        //        }
+        //        //switch (condition)
+        //        //{
+        //        //    case ComparingUtils.GreaterThan:
+        //        //        if (grade.Value > value)
+        //        //        {
+        //        //            grades.Add(grade);
+        //        //        }
+        //        //        break;
+        //        //    case ComparingUtils.EqualTo:
+        //        //        if (grade.Value == value)
+        //        //        {
+        //        //            grades.Add(grade);
+        //        //        }
+        //        //        break;
+        //        //    case ComparingUtils.LessThan:
+        //        //        if (grade.Value < value)
+        //        //        {
+        //        //            grades.Add(grade);
+        //        //        }
+        //        //        break;
+        //        //}
+        //    });
+
+        //    return Ok(grades);
+        //}
         //[HttpGet, Route("{id}/grades", Name = "GetStudentGradeByIssueDate")]
         //public IHttpActionResult GetStudentGradeByIssueDate(int id, [FromBody]DateTime issueDate)
         //{

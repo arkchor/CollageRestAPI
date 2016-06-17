@@ -60,6 +60,7 @@ namespace CollageRestAPI.Services
             if (studentsRequest.Id != 0)
             {
                 return BaseRepository.Instance.StudentsCollection.Where(student => student.Id == studentsRequest.Id);
+                //return BaseRepository.Instance.StudentsCollection.Where(student => student.Id.ToString().Contains(studentsRequest.Id.ToString()));
             }
 
             if (string.IsNullOrWhiteSpace(studentsRequest.FirstName) && string.IsNullOrWhiteSpace(studentsRequest.LastName) && studentsRequest.BornDate.Equals(DateTime.MinValue))
