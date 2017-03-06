@@ -15,6 +15,7 @@ namespace CollageRestAPI
         private IndexConfig()
         {
             Id = ObjectId.Parse("571fe9c98dfd1418185b71d6");
+            CurrentIndex = 109500;
         }
 
         [BsonId]
